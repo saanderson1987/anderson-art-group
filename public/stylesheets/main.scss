@@ -1,0 +1,23 @@
+@import './reset.scss';
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+$default-font-family: 'Source Sans Pro', sans-serif;
+
+
+body {
+  padding: 10px 20px;
+  // font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: $default-font-family;
+}
+
+a {
+  color: #00B7FF;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 30px;
+}

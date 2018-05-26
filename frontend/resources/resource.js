@@ -12,19 +12,19 @@ class Resource {
     this.name = name;
     this.baseRoute = `/api/${name}`;
     this.actions = {
-      GET_MANY: (oldState, newData) => {
+      [`${name.toUpperCase()}_GET_MANY`]: (oldState, newData) => {
         return merge({}, oldState, newData);
       },
-      GET_ONE: (oldState, newData) => {
+      [`${name.toUpperCase()}_GET_ONE`]: (oldState, newData) => {
         return merge({}, oldState, {[newData.id]: newData});
       }
-    }
+    };
   }
 
   all() {
     return this.send(
       axios.get(this.baseRoute),
-      'GET_MANY'
+      `${this.name.toUpperCase()}_GET_MANY`
     );
 
   }
@@ -34,28 +34,28 @@ class Resource {
       axios.get(this.baseRoute, {
         params: queryParams
       }),
-      'GET_MANY'
+      `${this.name.toUpperCase()}_GET_MANY`
     );
   }
 
   getById(id) {
     return this.send(
       axios.get(`${this.baseRoute}/${id}`),
-      'GET_ONE'
+      `${this.name.toUpperCase()}_GET_ONE`
     );
   }
 
   create(record) {
     return this.send(
       axios.post(this.baseRoute, record),
-      'GET_ONE'
+      `${this.name.toUpperCase()}_GET_ONE`
     );
   }
 
   update(record) {
     return this.send(
       axios.put(`${this.baseRoute}/${record.id}`, record),
-      'GET_ONE'
+      `${this.name.toUpperCase()}_GET_ONE`
     );
   }
 

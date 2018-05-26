@@ -4,6 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var flash = require('connect-flash');
+var session = require('express-session');
+var LocalStrategy = require('passport-local').Strategy;
+var bcrypt = require('bcryptjs');
+
 var app = express();
 
 // view engine setup
@@ -18,13 +24,86 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// var index = require('./routes/index');
-// var companies = require('./routes/companies');
-// app.use('/', index);
-// app.use('/api/companies', companies);
+app.use(session({
+  secret: 'anderson',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxAge: 100 * 60 * 60 * 24 * 30} // = 30 days
+}));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+const User = require('./models/user.js');
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.getByQuery({username})
+      .then(function (users) {
+        const user = Object.values(users)[0];
+        const isCorrectPassword = bcrypt.compareSync(password, user.password);
+        if (isCorrectPassword) return done(null, user);
+        return done(null, false);
+      })
+  }
+));
+
+passport.serializeUser(function(user, done) { // Standered Serialize for session
+   done(null, user.id)
+})
+
+passport.deserializeUser(function(id, done) {
+  User.getById(id)
+    .then(function(user) {
+      done(null, user);
+    });
+})
+
+// app.get('/api/isAuthenticated', (req, res) => {
+//   res.send(req.isAuthenticated());
+// })
+
+// Post request handling route for login
+app.post('/login', passport.authenticate('local', { successRedirect: '/testGuard',
+        failureRedirect: '/testGuard'}));
+
+// Standerd middleware taking req, res and next as parameters
+function loggedIn(req, res, next) {
+    if (req.isAuthenticated()) { // if request contains the user
+        next(); // call next
+    } else {
+        res.status(403).send("Unauthorized")  // throwing unauthorized
+    }
+}
+
+// Protected route
+app.get('/testGuard',loggedIn, (req,res)=>{
+  res.send("YOU ARE AUTHENTICATED");
+  console.log("YOU ARE AUTHENTICATED");
+
+})
+
+// Handle logout
+app.get('/logout',(req,res)=>{
+    req.logout();
+    res.send("YOU ARE NOW LOGGED OUT")
+})
 
 const setRoutes = require('./routes/set_routes');
 setRoutes(app);
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
+
+// app.use(function(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     setRoutes(app);
+//   } else {
+//     res.send('Please log in');
+//   }
+// });
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

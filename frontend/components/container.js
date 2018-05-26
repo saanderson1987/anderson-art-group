@@ -1,11 +1,11 @@
 import React from 'react';
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux';
 import Company from '../resources/company';
-import CompanyList from './CompanyList';
+import CompanyList from './company/company_list';
 
 const mapStateToProps = state => {
   return {
-    // companies: state.companies
     companies: Object.values(state.companies)
   }
 }
@@ -17,4 +17,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(middleman);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CompanyList));
