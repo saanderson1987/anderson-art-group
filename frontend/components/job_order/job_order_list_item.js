@@ -1,16 +1,19 @@
 import React from 'react';
 import ListItem from '../list_item';
-import JobDetails from './job_details';
+import JobOrderDetails from './job_order_details';
 
-const JobListItem = props => (
-  <ListItem name={props.item.name}>
-    <JobDetails itemId={props.item.id}/>
-  </ListItem>
-);
+const JobOrderListItem = props => {
+  const date= new Date(props.item.created_at).toDateString();
+  return (
+    <ListItem name={`Job order created on ${date}`}>
+      <JobOrderDetails itemId={props.item.id}/>
+    </ListItem>
+  );
+};
 
-export default JobListItem;
+export default JobOrderListItem;
 
-// class JobListItem extends React.Component {
+// class JobOrderListItem extends React.Component {
 //   constructor(props) {
 //     super(props);
 //     this.toggleExpansion = this.toggleExpansion.bind(this);
@@ -27,15 +30,14 @@ export default JobListItem;
 //         <i class="fas fa-caret-down"></i>
 //       : <i class="fas fa-caret-right"></i>;
 //     const details = this.state.expanded ?
-//         <JobDetails jobId={this.props.job.id}/>
+//         <JobOrderDetails jobOrderId={this.props.jobOrder.id}/>
 //       : null;
 //
-//     console.log(this.props);
 //     return (
 //       <div>
 //         <li onClick={this.toggleExpansion}>
 //           {caret}
-//           {this.props.job.name}
+//           Job Order created on [date]
 //         </li>
 //         {details}
 //       </div>
@@ -44,4 +46,4 @@ export default JobListItem;
 //
 // }
 //
-// export default JobListItem;
+// export default JobOrderListItem;

@@ -6,9 +6,12 @@ import Company from './resources/company';
 const companies = Company.reducer;
 import Job from './resources/job';
 const jobs = Job.reducer;
+import JobOrder from './resources/job_order';
+const job_orders = JobOrder.reducer;
 
 export default combineReducers({
   session,
   companies,
-  jobs
+  jobs,
+  job_orders
 });

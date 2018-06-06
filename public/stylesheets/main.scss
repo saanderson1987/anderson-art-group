@@ -1,23 +1,69 @@
-@import './reset.scss';
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+// @import './reset.scss';
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700');
 
 $default-font-family: 'Source Sans Pro', sans-serif;
-
+$white: #ffff;
+$grey: #f3f4f8;
 
 body {
-  padding: 10px 20px;
+  // padding: 10px 20px;
   // font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   font-family: $default-font-family;
+  background-color:$grey
 }
 
 a {
-  color: #00B7FF;
+  color: inherit;
+  text-decoration: inherit;
 }
 
 a:hover {
   cursor: pointer;
+  color: inherit;
+  text-decoration: inherit;
 }
 
 h1 {
   font-size: 30px;
 }
+
+ul {
+	list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.icon-container {
+  display: inline-block;
+  margin-left: 30px;
+  cursor: pointer;
+}
+
+.save-cancel-icons {
+  margin-left: 20px;
+}
+
+
+.check-icon {
+  color: green;
+  font-size: 1.4rem;
+}
+
+.edit-detail-cancel {
+  display: inline-block;
+  margin-left: 20px;
+  font-size: .85rem;
+  text-decoration: underline;
+}
+
+.root-container {
+  margin: 0px 13px 13px;
+}
+
+@import './navbar.scss';
+@import './tabs.scss';
+@import './list.scss';

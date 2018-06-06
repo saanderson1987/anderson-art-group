@@ -1,14 +1,11 @@
 import React from 'react';
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom';
 import NotFound from './not_found';
-import Header from './header';
 import NavBar from './nav_bar';
 import CompanyListContainer from './company/company_list_container';
 
-
 const App = () => (
   <div>
-    <Header />
     <NavBar>
       <NavLink to="/companies">Companies</NavLink>
       <NavLink to="/jobs">Jobs</NavLink>

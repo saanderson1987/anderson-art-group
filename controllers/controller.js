@@ -12,11 +12,13 @@ class Controller {
   }
 
   index(req, res) {
-    if (isEmpty(req.query)) {
-      this.send(this.model.all(), res);
-    } else {
+    const query = req.query;
+    // if (isEmpty(query) || (query.columns && Object.keys(query).length === 1) ) {
+    //   const columns = query.columns ? query.columns : null;
+    //   this.send(this.model.all(columns), res);
+    // } else {
       this.send(this.model.getByQuery(req.query), res);
-    }
+    // }
   }
 
   getById(req, res) {

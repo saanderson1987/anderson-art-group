@@ -7,22 +7,54 @@ class Model {
     this.table = new pgp.helpers.TableName(name);
   }
 
-  all() {
-    const query = pgp.as.format('SELECT * FROM $1', this.table);
+  test() {
+    const name = 'name';
+    const query = pgp.as.format('SELECT ${columns:name} FROM ${table}', {
+      columns: ['id', name],
+      table: this.table
+    });
     return this.format(db.any(query));
   }
 
+  // all(columns) {
+  //   // const query = pgp.as.format('SELECT * FROM $1', this.table);
+  //   let query;
+  //   if (columns) {
+  //     columns = columns.split(',');
+  //     if (!columns.includes('id')) columns.push('id');
+  //     query = pgp.as.format('SELECT ${columns:name} FROM ${table}', {
+  //       columns: columns,
+  //       table: this.table
+  //     });
+  //   } else query = pgp.as.format('SELECT * FROM $1', this.table);
+  //   return this.format(db.any(query));
+  // }
+
   getByQuery(queryParams) {
-    console.log(queryParams);
-    const columns = Object.keys(queryParams);
-    let whereClause = ' WHERE ';
-    columns.forEach((column, idx) => {
-      if (idx > 0) whereClause += ' AND ';
-      whereClause += `${column} = \${${column}}`;
-    });
+    let selectClause = 'SELECT *';
+    if (queryParams.columns) {
+      const selectColumns = queryParams.columns.split(',');
+      if (!selectColumns.includes('id')) selectColumns.push('id');
+      queryParams.columns = selectColumns;
+      selectClause = 'SELECT ${columns:name}';
+    }
+
+    let columns = Object.assign({}, queryParams);
+    delete columns.columns;
+    columns = Object.keys(columns);
+    let whereClause = '';
+    if (columns.length > 0) {
+      whereClause = ' WHERE ';
+      columns.forEach((column, idx) => {
+        if (idx > 0) whereClause += ' AND ';
+        whereClause += `${column} = \${${column}}`;
+      });
+    }
+
     queryParams.table = this.table;
 
-    const query = pgp.as.format('SELECT * FROM ${table}' + whereClause, queryParams);
+    const query = pgp.as.format(selectClause + ' FROM ${table}' + whereClause, queryParams);
+    console.log(query);
     return this.format(db.any(query));
   }
 

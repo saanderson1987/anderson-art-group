@@ -1,9 +1,9 @@
 import axios from 'axios';
-import merge from 'lodash/merge';
+import merge from 'lodash.merge';
 
 class Resource {
   constructor(name) {
-    this.all = this.all.bind(this);
+    // this.all = this.all.bind(this);
     this.getById = this.getById.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
@@ -29,13 +29,22 @@ class Resource {
 
   }
 
-  getByQuery(queryParams) {
+  getByQuery(queryParams, subset='LAST_QUERY') {
+    // subset = subset.toUpperCase();
+    // this.setAction(subset);
     return this.send(
       axios.get(this.baseRoute, {
         params: queryParams
       }),
       `${this.name.toUpperCase()}_GET_MANY`
     );
+  }
+
+  setAction(subset) {
+    this.actions[`${this.name.toUpperCase()}_${subset}_GET_MANY`] =
+      (oldState, newData) => {
+        return merge({}, oldState, {[subset.toLowerCase()]: newData});
+      }
   }
 
   getById(id) {

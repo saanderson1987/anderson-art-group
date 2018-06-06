@@ -1,11 +1,10 @@
 import React from 'react';
-import OrderDetails from './order_details';
 
-class OrderListItem extends React.Component {
+class ListItem extends React.Component {
   constructor(props) {
     super(props);
     this.toggleExpansion = this.toggleExpansion.bind(this);
-    this.state = {expanded: false};
+    this.state = {expanded: true};
   }
 
   toggleExpansion(e) {
@@ -14,19 +13,20 @@ class OrderListItem extends React.Component {
   }
 
   render() {
+    const isLast = this.props.isLast ? 'list-item--last' : '';
+    const isExpanded = this.state.expanded ? 'bold' : '';
     const caret = this.state.expanded ?
         <i class="fas fa-caret-down"></i>
       : <i class="fas fa-caret-right"></i>;
     const details = this.state.expanded ?
-        <OrderDetails orderId={this.props.order.id}/>
+        this.props.children
       : null;
-
     return (
-      <div>
-        <li onClick={this.toggleExpansion}>
+      <div className={`list-item ${isLast}`}>
+        <div className={`list-item-label ${isExpanded}`} onClick={this.toggleExpansion}>
           {caret}
-          {this.props.order.name}
-        </li>
+          <span>{this.props.name}</span>
+        </div>
         {details}
       </div>
     );
@@ -34,4 +34,4 @@ class OrderListItem extends React.Component {
 
 }
 
-export default OrderListItem;
+export default ListItem;
