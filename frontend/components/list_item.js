@@ -4,7 +4,7 @@ class ListItem extends React.Component {
   constructor(props) {
     super(props);
     this.toggleExpansion = this.toggleExpansion.bind(this);
-    this.state = {expanded: true};
+    this.state = {expanded: false};
   }
 
   toggleExpansion(e) {
@@ -13,7 +13,8 @@ class ListItem extends React.Component {
   }
 
   render() {
-    const isLast = this.props.isLast ? 'list-item--last' : '';
+    // const isLast = this.props.isLast ? 'list-item--last' : '';
+    const isFirst = this.props.isFirst ? 'list-item--first' : '';
     const isExpanded = this.state.expanded ? 'bold' : '';
     const caret = this.state.expanded ?
         <i class="fas fa-caret-down"></i>
@@ -22,7 +23,7 @@ class ListItem extends React.Component {
         this.props.children
       : null;
     return (
-      <div className={`list-item ${isLast}`}>
+      <div className={`list-item ${isFirst}`}>
         <div className={`list-item-label ${isExpanded}`} onClick={this.toggleExpansion}>
           {caret}
           <span>{this.props.name}</span>

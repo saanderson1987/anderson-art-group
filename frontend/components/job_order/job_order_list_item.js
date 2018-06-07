@@ -5,7 +5,7 @@ import JobOrderDetails from './job_order_details';
 const JobOrderListItem = props => {
   const date= new Date(props.item.created_at).toDateString();
   return (
-    <ListItem name={`Job order created on ${date}`}>
+    <ListItem name={`Job order created on ${date}`} {...props}>
       <JobOrderDetails itemId={props.item.id}/>
     </ListItem>
   );

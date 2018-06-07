@@ -3,7 +3,7 @@ import ListItem from '../list_item';
 import JobDetails from './job_details';
 
 const JobListItem = props => (
-  <ListItem name={props.item.name}>
+  <ListItem name={props.item.name} {...props}>
     <JobDetails itemId={props.item.id}/>
   </ListItem>
 );

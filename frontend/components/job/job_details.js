@@ -6,7 +6,7 @@ import JobOrderList from '../job_order/job_order_list';
 
 const JobDetails = props => (
   <ItemDetails resource={Job} {...props}>
-    <ItemDetail path='po_num' detailName='PO #'/>
+    <ItemDetail column='po_num' detailName='PO #'/>
     <JobOrderList parentId={props.itemId}/>
   </ItemDetails>
 );

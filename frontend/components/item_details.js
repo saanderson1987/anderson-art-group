@@ -6,7 +6,8 @@ class ItemDetails extends React.Component {
   constructor(props) {
     super(props);
     this.toggleExpansion = this.toggleExpansion.bind(this);
-    this.state = {expanded: true};
+    this.updateDetail = this.updateDetail.bind(this);
+    this.state = {expanded: false};
   }
 
   componentDidMount() {
@@ -27,9 +28,9 @@ class ItemDetails extends React.Component {
   render() {
     if (!this.props.item) return null;
     const children = React.Children.map(this.props.children, child => {
-      if (child.props.path) {
+      if (child.props.column) {
         child = React.cloneElement(child, {
-          detailValue: this.props.item[child.props.path],
+          detailValue: this.props.item[child.props.column],
           updateDetail: this.updateDetail
         })
       }

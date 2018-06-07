@@ -24,17 +24,19 @@ class List extends React.Component {
       this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
     const listNameElement = this.props.root ? null :
         <div className='list-name'>{listName}:</div>;
-    const isRoot = this.props.root ? 'list--root' : '';
+    const isRoot = this.props.root ? 'list-items--root' : '';
     const items = this.props.items;
     const itemList = items.map( (item, idx) => {
-      const isLast = idx === items.length - 1;
-      return React.cloneElement(this.props.children, {item, isLast});
+      // const isLast = idx === items.length - 1;
+      const isFirst = idx === 0;
+      return React.cloneElement(this.props.children, {item, isFirst});
     });
-
+    // <div><i class="fas fa-plus-circle"></i>Create New</div>
     return (
-      <div className={`list ${isRoot}`}>
+      <div className={'list'}>
         {listNameElement}
-        <div className='list-items'>
+        <div className={`list-items ${isRoot}`}>
+        <button className='button--new'><i className="fas fa-plus-circle"></i><span>Create new</span></button>
           {itemList}
         </div>
       </div>

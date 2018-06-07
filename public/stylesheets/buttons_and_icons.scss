@@ -1,0 +1,55 @@
+.button--new {
+  border: 1px solid #e4e4e4;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: green;
+  background-color: white;
+  margin: 10px;
+}
+
+.button--new > span {
+  margin-left: 5px;
+}
+
+.icon-container {
+  display: inline-block;
+  margin-left: 30px;
+}
+
+.icon-container * {
+  cursor: pointer;
+}
+
+.save-cancel-icons {
+  margin-left: 20px;
+}
+
+.pencil-icon {
+  color: #b38700;
+}
+
+.check-icon {
+  color: green;
+  font-size: 1.4rem;
+}
+
+.edit-detail-cancel {
+  display: inline-block;
+  margin-left: 20px;
+  font-size: .85rem;
+  text-decoration: underline;
+}
+
+.loader {
+    border: 3px solid #f3f3f3; /* Light grey */
+    border-top: 3px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

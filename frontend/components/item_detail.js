@@ -5,8 +5,10 @@ class ItemDetail extends React.Component {
     super(props);
     this.handleDetailValueChange = this.handleDetailValueChange.bind(this);
     this.toggleEditMode = this.toggleEditMode.bind(this);
+    this.submitDetailUpdate = this.submitDetailUpdate.bind(this);
     this.state = {
       inEditMode: false,
+      isDetailValueUpdating: false,
       detailValue: props.detailValue
     };
   }
@@ -14,6 +16,7 @@ class ItemDetail extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.detailValue !== prevProps.detailValue) {
       this.setState({detailValue: this.props.detailValue});
+      this.setState({isDetailValueUpdating: false});
     }
   }
 
@@ -26,30 +29,41 @@ class ItemDetail extends React.Component {
     this.setState({inEditMode});
   }
 
+  submitDetailUpdate(e) {
+    this.toggleEditMode();
+    if (this.props.detailValue !== this.state.detailValue) {
+      this.setState({isDetailValueUpdating: true});
+      this.props.updateDetail(this.props.column, this.state.detailValue);
+    }
+  }
+
   render() {
-    const path = this.props.path;
+    const column = this.props.column;
     const detailName = this.props.detailName ?
         this.props.detailName + ':'
-      : path.charAt(0).toUpperCase() + path.slice(1) + ':';
+      : column.charAt(0).toUpperCase() + column.slice(1) + ':';
     const detailValue = this.state.inEditMode ?
         <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>
       : this.props.detailValue
-
-      // <i class="x-icon far fa-times-circle"></i>
     const editIcons = this.state.inEditMode ?
         <div className='icon-container save-cancel-icons'>
-          <i class="check-icon far fa-check-circle"></i>
-          <div className='edit-detail-cancel'>Cancel</div>
+          <i className="check-icon far fa-check-circle" onClick={this.submitDetailUpdate}></i>
+          <div className='edit-detail-cancel' onClick={this.toggleEditMode}>Cancel</div>
         </div>
       : <div className='icon-container' onClick={this.toggleEditMode}>
-          <i class='fas fa-pencil-alt'></i>
+          <i className='pencil-icon fas fa-pencil-alt'></i>
+        </div>;
+    const detailValueContainer = this.state.isDetailValueUpdating ?
+        <div className='loader inline'/>
+      : <div className='detail-value-container'>
+          <div className='item-detail-value'>{detailValue}</div>
+          {editIcons}
         </div>;
 
     return (
       <div className='item-detail'>
         <div className='item-detail-name'>{detailName}</div>
-        <div className='item-detail-value'>{detailValue}</div>
-        {editIcons}
+        {detailValueContainer}
       </div>
     );
   }

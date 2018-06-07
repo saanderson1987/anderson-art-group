@@ -5,7 +5,7 @@ import JobOrder from '../../resources/job_order';
 
 const JobOrderDetails = props => (
   <ItemDetails resource={JobOrder} {...props}>
-    <ItemDetail path='notes'/>
+    <ItemDetail column='notes'/>
   </ItemDetails>
 );
 
