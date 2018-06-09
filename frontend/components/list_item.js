@@ -13,7 +13,6 @@ class ListItem extends React.Component {
   }
 
   render() {
-    // const isLast = this.props.isLast ? 'list-item--last' : '';
     const isFirst = this.props.isFirst ? 'list-item--first' : '';
     const isExpanded = this.state.expanded ? 'bold' : '';
     const caret = this.state.expanded ?

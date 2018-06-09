@@ -32,7 +32,7 @@ class ItemDetails extends React.Component {
         child = React.cloneElement(child, {
           detailValue: this.props.item[child.props.column],
           updateDetail: this.updateDetail
-        })
+        });
       }
       return child;
     });

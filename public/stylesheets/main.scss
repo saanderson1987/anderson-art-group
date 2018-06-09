@@ -33,6 +33,10 @@ ul {
   margin: 0;
 }
 
+button {
+  cursor: pointer;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -42,12 +46,17 @@ ul {
   vertical-align: bottom;
 }
 
+.hidden {
+  display: none;
+}
+
 .root-container {
   margin: 0px 13px 13px;
 }
 
 
 @import './buttons_and_icons.scss';
+@import './modal.scss';
 @import './navbar.scss';
 @import './tabs.scss';
 @import './list.scss';

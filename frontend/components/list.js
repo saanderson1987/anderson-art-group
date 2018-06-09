@@ -2,11 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import isEqual from 'lodash.isequal';
+// import Modal from './ui/modal';
+import NewCompanyModal from './company/new_company_modal';
 
 class List extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {location: props.location.pathname};
+    this.toggleNewItemModal = this.toggleNewItemModal.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      location: props.location.pathname,
+      isNewItemModalVisible: false
+    };
   }
 
   componentDidMount() {
@@ -17,6 +24,27 @@ class List extends React.Component {
     if (!isEqual(prevProps.query, this.props.query)) this.props.getAll();
   }
 
+  toggleNewItemModal(options) {
+      let isNewItemModalVisible;
+      if (options.isVisible) isNewItemModalVisible = options.isVisible;
+      else isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
+      this.setState({isNewItemModalVisible});
+
+  }
+
+  toggle(options) {
+    const isItemVisible = `is${options.modal}ModalVisible`;
+    let isVisible;
+    if (options.isVisible) isVisible = options.isVisible;
+    else isVisible = this.state[isItemVisible] ? false : true;
+    this.setState({[isItemVisible]: isVisible})
+  }
+
+  onClickModalOverlay(e) {
+    this.toggle({modal: 'NewItem', isVisible: false});
+    this.toggle({modal: 'Warning', isVisible: true});
+  }
+
   render() {
     const createNew = this.props.createNew;
 
@@ -24,21 +52,27 @@ class List extends React.Component {
       this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
     const listNameElement = this.props.root ? null :
         <div className='list-name'>{listName}:</div>;
+
     const isRoot = this.props.root ? 'list-items--root' : '';
+
     const items = this.props.items;
     const itemList = items.map( (item, idx) => {
-      // const isLast = idx === items.length - 1;
       const isFirst = idx === 0;
       return React.cloneElement(this.props.children, {item, isFirst});
     });
-    // <div><i class="fas fa-plus-circle"></i>Create New</div>
     return (
       <div className={'list'}>
         {listNameElement}
         <div className={`list-items ${isRoot}`}>
-        <button className='button--new'><i className="fas fa-plus-circle"></i><span>Create new</span></button>
+          <button className='button--new' onClick={(e) => this.toggle({modal: 'NewItem', isVisible: true})}>
+            <i className="fas fa-plus-circle"></i><span>Create new</span>
+          </button>
           {itemList}
         </div>
+        <NewCompanyModal
+          isVisible={this.state.isNewItemModalVisible}
+          toggle={this.toggleNewItemModal}
+        />
       </div>
     );
   }
