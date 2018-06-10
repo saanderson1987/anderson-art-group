@@ -4,7 +4,7 @@ import CompanyDetails from './company_details';
 
 const CompanyListItem = props => (
   <ListItem name={props.item.name} {...props}>
-    <CompanyDetails itemId={props.item.id}/>
+    <CompanyDetails itemId={props.item.id} resource={props.resource}/>
   </ListItem>
 );
 

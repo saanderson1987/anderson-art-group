@@ -9,14 +9,12 @@ class NewCompanyModal extends React.Component {
   }
 
   render() {
-    const columns = [
-      {columName: 'notes'}
-    ];
 
     return (
       <Modal {...this.props}>
-        <NewItemForm {...this.props} resource={Company} columns={[
+        <NewItemForm {...this.props} resource={Company} itemTypeName='Company' itemDetails={[
           {columnName: 'name'},
+          {columnName: 'status', type: 'radio', values: [{valueName: 'prospect'}, {valueName: 'client'}]},
           {columnName: 'notes'}
         ]}/>
       </Modal>

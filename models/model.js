@@ -30,6 +30,17 @@ class Model {
   //   return this.format(db.any(query));
   // }
 
+  createWhereClause(columns) {
+    let whereClause = '';
+    if (columns.length > 0) {
+      whereClause = ' WHERE ';
+      columns.forEach((column, idx) => {
+        if (idx > 0) whereClause += ' AND ';
+        whereClause += `${column} = \${${column}}`;
+      });
+    }
+    return whereClause;
+  }
   getByQuery(queryParams) {
     let selectClause = 'SELECT *';
     if (queryParams.columns) {
@@ -42,14 +53,15 @@ class Model {
     let columns = Object.assign({}, queryParams);
     delete columns.columns;
     columns = Object.keys(columns);
-    let whereClause = '';
-    if (columns.length > 0) {
-      whereClause = ' WHERE ';
-      columns.forEach((column, idx) => {
-        if (idx > 0) whereClause += ' AND ';
-        whereClause += `${column} = \${${column}}`;
-      });
-    }
+    const whereClause = this.createWhereClause(columns);
+    // let whereClause = '';
+    // if (columns.length > 0) {
+    //   whereClause = ' WHERE ';
+    //   columns.forEach((column, idx) => {
+    //     if (idx > 0) whereClause += ' AND ';
+    //     whereClause += `${column} = \${${column}}`;
+    //   });
+    // }
 
     queryParams.table = this.table;
 

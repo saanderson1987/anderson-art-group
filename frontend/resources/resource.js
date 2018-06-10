@@ -2,20 +2,20 @@ import axios from 'axios';
 import merge from 'lodash.merge';
 
 class Resource {
-  constructor(name) {
+  constructor(baseRouteName, name) {
     // this.all = this.all.bind(this);
     this.getById = this.getById.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
     this.reducer = this.reducer.bind(this);
-    this.name = name;
-    this.baseRoute = `/api/${name}`;
+    this.name = name ? name : baseRouteName;
+    this.baseRoute = `/api/${baseRouteName}`;
     this.actions = {
-      [`${name.toUpperCase()}_GET_MANY`]: (oldState, newData) => {
+      [`${this.name.toUpperCase()}_GET_MANY`]: (oldState, newData) => {
         return merge({}, oldState, newData);
       },
-      [`${name.toUpperCase()}_GET_ONE`]: (oldState, newData) => {
+      [`${this.name.toUpperCase()}_GET_ONE`]: (oldState, newData) => {
         return merge({}, oldState, {[newData.id]: newData});
       }
     };

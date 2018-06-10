@@ -16,11 +16,12 @@ class ListItem extends React.Component {
     const isFirst = this.props.isFirst ? 'list-item--first' : '';
     const isExpanded = this.state.expanded ? 'bold' : '';
     const caret = this.state.expanded ?
-        <i class="fas fa-caret-down"></i>
-      : <i class="fas fa-caret-right"></i>;
+        <i className="fas fa-caret-down"></i>
+      : <i className="fas fa-caret-right"></i>;
     const details = this.state.expanded ?
         this.props.children
       : null;
+
     return (
       <div className={`list-item ${isFirst}`}>
         <div className={`list-item-label ${isExpanded}`} onClick={this.toggleExpansion}>

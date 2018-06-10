@@ -5,7 +5,7 @@ import Company from '../../resources/company';
 import JobList from '../job/job_list';
 
 const CompanyDetails = props => (
-  <ItemDetails resource={Company} {...props}>
+  <ItemDetails resource={props.resource} {...props}>
     <ItemDetail column='notes'/>
     <JobList parentId={props.itemId}/>
   </ItemDetails>

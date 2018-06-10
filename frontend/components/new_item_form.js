@@ -9,8 +9,8 @@ class NewItemForm extends React.Component {
     this.onItemDetailChange = this.onItemDetailChange.bind(this);
     this.onClickSave = this.onClickSave.bind(this);
     this.state = {};
-    props.columns.forEach(column => {
-      this.state[column.columnName] = '';
+    props.itemDetails.forEach(itemDetail => {
+      this.state[itemDetail.columnName] = '';
     });
   }
 
@@ -21,25 +21,34 @@ class NewItemForm extends React.Component {
   onClickSave(event) {
     event.preventDefault();
     const record = {};
-    this.props.columns.forEach(column => {
-      record[column.columnName] = this.state[column.columnName];
+    this.props.itemDetails.forEach(itemDetail => {
+      record[itemDetail.columnName] = this.state[itemDetail.columnName];
     })
-    console.log(this.props.create);
     this.props.create(record);
-    this.props.toggle({isVisible: false});
+    this.props.toggle();
   }
 
   render() {
-    const itemDetails = this.props.columns.map(column => {
-      return <NewItemDetail column={column} detailValue={this.state[column.columnName]} onValueChange={this.onItemDetailChange}/>;
+    const itemDetails = this.props.itemDetails.map(itemDetail => {
+      return (
+        <NewItemDetail
+          itemDetail={itemDetail}
+          detailValue={this.state[itemDetail.columnName]}
+          onValueChange={this.onItemDetailChange}
+          key={itemDetail.valueName}
+        />
+      );
     });
+
     return (
-      <div>
-        <h1>Create New</h1>
-        {itemDetails}
-        <div>
-          <button onClick={(e) => this.props.toggle({isVisible: false})}>Cancel</button>
-          <button onClick={this.onClickSave}>Save</button>
+      <div className='form'>
+        <div className='form-header'>Create New {this.props.itemTypeName}</div>
+        <div className='form-body'>
+          {itemDetails}
+          <div className='button-row'>
+            <button onClick={(e) => this.props.toggle({isVisible: false})}>Cancel</button>
+            <button className='button--save' onClick={this.onClickSave}>Save</button>
+          </div>
         </div>
       </div>
     );

@@ -1,10 +1,32 @@
-.button--new {
+.button-row  {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  cursor: pointer;
   border: 1px solid #e4e4e4;
   border-radius: 20px;
   font-size: 0.8rem;
+  background-color: inherit;
+  padding: 6px 30px;
+}
+
+.button--save {
+  // background-color: #28c34c;
+  background-color: #34cc57;
+  border: 1px solid #34cc57;
+  color: white;
+}
+
+.button--new {
+  // border: 1px solid #e4e4e4;
+  // border-radius: 20px;
+  // font-size: 0.8rem;
+  // background-color: white;
   color: green;
-  background-color: white;
   margin: 10px;
+  padding: 1px 7px 2px;
 }
 
 .button--new > span {

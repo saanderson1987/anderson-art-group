@@ -34,6 +34,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "serve-favicon": "~2.4.5",
+    "shortid": "^2.2.8",
     "universal-router": "^6.0.0"
   },
   "devDependencies": {

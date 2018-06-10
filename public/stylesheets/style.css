@@ -25,10 +25,6 @@ ul {
   margin: 0;
 }
 
-button {
-  cursor: pointer;
-}
-
 .bold {
   font-weight: bold;
 }
@@ -46,13 +42,30 @@ button {
   margin: 0px 13px 13px;
 }
 
-.button--new {
+.button-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  cursor: pointer;
   border: 1px solid #e4e4e4;
   border-radius: 20px;
   font-size: 0.8rem;
+  background-color: inherit;
+  padding: 6px 30px;
+}
+
+.button--save {
+  background-color: #34cc57;
+  border: 1px solid #34cc57;
+  color: white;
+}
+
+.button--new {
   color: green;
-  background-color: white;
   margin: 10px;
+  padding: 1px 7px 2px;
 }
 
 .button--new > span {
@@ -107,6 +120,30 @@ button {
     transform: rotate(360deg);
   }
 }
+.form-header {
+  padding: 10px 20px 10px;
+  background-color: #4f78a9;
+  color: white;
+}
+
+.form-body {
+  padding: 0px 20px 20px;
+}
+
+.form-item-detail {
+  margin: 20px 0px;
+}
+
+.radio-buttons-row {
+  display: inline-block;
+}
+
+.radio-button-display-name {
+  display: inline-block;
+  margin: 0px 25px 0px 8px;
+  font-size: 0.8rem;
+}
+
 .modal-overlay {
   z-index: 100;
   position: fixed;
@@ -114,7 +151,7 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .modal- {

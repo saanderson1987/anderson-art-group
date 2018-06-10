@@ -3,6 +3,8 @@ import { NavLink, Route, Switch, Redirect } from 'react-router-dom';
 import Tabs from '../tabs';
 import Tab from '../tab';
 import CompanyList from './company_list';
+import Prospect from '../../resources/prospect_company';
+import Client from '../../resources/client_company';
 
 class CompanyListContainer extends React.Component {
   constructor(props) {
@@ -17,8 +19,8 @@ class CompanyListContainer extends React.Component {
           <Tab to='/companies/prospects'>Prospects</Tab>
         </Tabs>
         <Switch>
-          <Route exact path='/companies/clients' render={props => <CompanyList query={{status: "client"}} root={true} {...props}/>} />
-          <Route exact path='/companies/prospects' render={props => <CompanyList query={{status: "prospect"}} root={true} {...props}/>} />
+          <Route exact path='/companies/clients' render={props => <CompanyList resource={Client} root={true} {...props}/>} />
+          <Route exact path='/companies/prospects' render={props => <CompanyList resource={Prospect} root={true} {...props}/>} />
           <Redirect exact from="/companies" to="/companies/prospects"/>
         </Switch>
       </div>

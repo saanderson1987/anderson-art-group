@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import isEqual from 'lodash.isequal';
-// import Modal from './ui/modal';
 import NewCompanyModal from './company/new_company_modal';
 
 class List extends React.Component {
@@ -21,14 +19,16 @@ class List extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.query, this.props.query)) this.props.getAll();
+    if (prevProps.resource !== this.props.resource) this.props.getAll();
   }
 
   toggleNewItemModal(options) {
-      let isNewItemModalVisible;
-      if (options.isVisible) isNewItemModalVisible = options.isVisible;
-      else isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
-      this.setState({isNewItemModalVisible});
+      // let isNewItemModalVisible;
+      // if (options.isVisible) isNewItemModalVisible = options.isVisible;
+      // else isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
+      // this.setState({isNewItemModalVisible});
+    const isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
+    this.setState({isNewItemModalVisible});
 
   }
 
@@ -46,33 +46,36 @@ class List extends React.Component {
   }
 
   render() {
-    const createNew = this.props.createNew;
-
     const listName =
       this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
     const listNameElement = this.props.root ? null :
         <div className='list-name'>{listName}:</div>;
 
-    const isRoot = this.props.root ? 'list-items--root' : '';
-
     const items = this.props.items;
     const itemList = items.map( (item, idx) => {
       const isFirst = idx === 0;
-      return React.cloneElement(this.props.children, {item, isFirst});
+      return React.cloneElement(this.props.children, {item, isFirst, key: item.id});
     });
-    return (
-      <div className={'list'}>
-        {listNameElement}
-        <div className={`list-items ${isRoot}`}>
-          <button className='button--new' onClick={(e) => this.toggle({modal: 'NewItem', isVisible: true})}>
-            <i className="fas fa-plus-circle"></i><span>Create new</span>
-          </button>
-          {itemList}
-        </div>
+
+    const newCompanyModal = this.state.isNewItemModalVisible ?
         <NewCompanyModal
           isVisible={this.state.isNewItemModalVisible}
           toggle={this.toggleNewItemModal}
         />
+      : null;
+
+    const isRoot = this.props.root ? 'list-items--root' : '';
+
+    return (
+      <div className={'list'}>
+        {listNameElement}
+        <div className={`list-items ${isRoot}`}>
+          <button className='button--new' onClick={(e) => this.toggleNewItemModal()}>
+            <i className="fas fa-plus-circle"></i><span>Create new</span>
+          </button>
+          {itemList}
+        </div>
+        {newCompanyModal}
       </div>
     );
   }
@@ -87,8 +90,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const columns = ownProps.columns ? ownProps.columns : 'name';
   const query = ownProps.query ? ownProps.query : {};
   return {
-    getAll: () => dispatch(ownProps.resource.getByQuery({columns, ...query})),
-    createNew: (item) => dispatch(ownProps.resource.create(item))
+    getAll: () => dispatch(ownProps.resource.getByQuery({columns, ...query}))
   }
 };
 

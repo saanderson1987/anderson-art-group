@@ -6,8 +6,8 @@ import CompanyListItem from './company_list_item';
 
 const CompanyList = props => {
   return (
-    <List resource={Company} {...props}>
-      <CompanyListItem/>
+    <List resource={props.resource} {...props}>
+      <CompanyListItem resource={props.resource}/>
     </List>
   );
 };
