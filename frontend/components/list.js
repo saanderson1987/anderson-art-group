@@ -1,13 +1,15 @@
 import React from 'react';
+import get from 'lodash.get';
+import { capitalize } from '../../util/functions';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import NewCompanyModal from './company/new_company_modal';
+import CompanyListItem from './company/company_list_item';
 
 class List extends React.Component {
   constructor(props) {
     super(props);
     this.toggleNewItemModal = this.toggleNewItemModal.bind(this);
-    this.toggle = this.toggle.bind(this);
     this.state = {
       location: props.location.pathname,
       isNewItemModalVisible: false
@@ -22,129 +24,71 @@ class List extends React.Component {
     if (prevProps.resource !== this.props.resource) this.props.getAll();
   }
 
-  toggleNewItemModal(options) {
-      // let isNewItemModalVisible;
-      // if (options.isVisible) isNewItemModalVisible = options.isVisible;
-      // else isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
-      // this.setState({isNewItemModalVisible});
+  toggleNewItemModal() {
     const isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
     this.setState({isNewItemModalVisible});
-
-  }
-
-  toggle(options) {
-    const isItemVisible = `is${options.modal}ModalVisible`;
-    let isVisible;
-    if (options.isVisible) isVisible = options.isVisible;
-    else isVisible = this.state[isItemVisible] ? false : true;
-    this.setState({[isItemVisible]: isVisible})
-  }
-
-  onClickModalOverlay(e) {
-    this.toggle({modal: 'NewItem', isVisible: false});
-    this.toggle({modal: 'Warning', isVisible: true});
   }
 
   render() {
-    const listName =
-      this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
+    const listName = this.props.route ?
+        capitalize(this.props.route)
+      : capitalize(this.props.resource.name);
+      // this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
     const listNameElement = this.props.root ? null :
         <div className='list-name'>{listName}:</div>;
-
+    let listItemElement;
+    let newItemModalElement;
+    React.Children.forEach(this.props.children, (child) => {
+      if (child.type.displayName.slice(-8) === 'ListItem') listItemElement = child;
+      if (child.type.displayName.slice(-5) === 'Modal') newItemModalElement = child;
+    });
     const items = this.props.items;
     const itemList = items.map( (item, idx) => {
       const isFirst = idx === 0;
-      return React.cloneElement(this.props.children, {item, isFirst, key: item.id});
+      return React.cloneElement(listItemElement, {item, isFirst, key: item.id});
     });
-
-    const newCompanyModal = this.state.isNewItemModalVisible ?
-        <NewCompanyModal
-          isVisible={this.state.isNewItemModalVisible}
-          toggle={this.toggleNewItemModal}
-        />
+    const newItemModal = this.state.isNewItemModalVisible ?
+        React.cloneElement(newItemModalElement, {
+          isVisible: this.state.isNewItemModalVisible,
+          toggle: this.toggleNewItemModal
+        })
       : null;
 
     const isRoot = this.props.root ? 'list-items--root' : '';
+    const buttonContainer = this.props.root ? 'root-list-new-button-container' : '';
 
     return (
       <div className={'list'}>
         {listNameElement}
         <div className={`list-items ${isRoot}`}>
-          <button className='button--new' onClick={(e) => this.toggleNewItemModal()}>
-            <i className="fas fa-plus-circle"></i><span>Create new</span>
-          </button>
+          <div className={buttonContainer}>
+            <button className='button--new' onClick={(e) => this.toggleNewItemModal()}>
+              <i className="fas fa-plus-circle"></i><span>Create new</span>
+            </button>
+          </div>
           {itemList}
         </div>
-        {newCompanyModal}
+        {newItemModal}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const items = ownProps.subset ?
+      get(state[ownProps.resource.name], ownProps.subset, {})
+    : state[ownProps.resource.name];
   return {
-    items: Object.values(state[ownProps.resource.name])
-  }
+      items: Object.values(items)
+    };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
   const columns = ownProps.columns ? ownProps.columns : 'name';
   const query = ownProps.query ? ownProps.query : {};
+  const {subset, route} = ownProps;
   return {
-    getAll: () => dispatch(ownProps.resource.getByQuery({columns, ...query}))
+    getAll: () => dispatch(ownProps.resource.getByQuery({columns, ...query}, subset, route))
   }
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(List));
-
-
-// <button onClick={function() {createNew(newJob);}}>Create new {this.props.itemName}</button>
-
-// function makeList (resource, ListItem) {
-//   const mapStateToProps = state => {
-//     return {
-//       items: Object.values(state[resource.name])
-//     }
-//   };
-//   const mapDispatchToProps = dispatch => {
-//     return {
-//       getAll: () => dispatch(resource.all()),
-//       createNew: (item) => dispatch(resource.create(item))
-//     }
-//   };
-//   class List extends React.Component {
-//     constructor(props) {
-//       super(props);
-//     }
-//
-//     componentDidMount() {
-//       this.props.getAll();
-//     }
-//
-//     render() {
-//       const newJob = {
-//         name: 'TestJob5',
-//         po_num: '123ABC',
-//         company_id: 1
-//       };
-//       const listName = resource.name[0].toUpperCase() + resource.name.slice(1);
-//       const createNew = this.props.createNew;
-//       const items = this.props.items;
-//       const itemList = items.map(item => {
-//         return <ListItem item={item}/>
-//       });
-//       return (
-//         <div>
-//           {listName}:
-//           <ul>
-//             {itemList}
-//           </ul>
-//           <button onClick={function() {createNew(newJob);}}>Create new {this.props.itemName}</button>
-//         </div>
-//       );
-//     }
-//   }
-//
-//   return withRouter(connect(mapStateToProps, mapDispatchToProps)(List));
-// }
-//
-// export default makeList;

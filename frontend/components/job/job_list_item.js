@@ -2,11 +2,13 @@ import React from 'react';
 import ListItem from '../list_item';
 import JobDetails from './job_details';
 
-const JobListItem = props => (
-  <ListItem name={props.item.name} {...props}>
-    <JobDetails itemId={props.item.id}/>
-  </ListItem>
-);
+const JobListItem = props => {
+  return (
+    <ListItem name={props.item.name} {...props}>
+      <JobDetails itemId={props.item.id} resource={props.resource} subset={props.subset} route={props.route}/>
+    </ListItem>
+  );
+};
 
 export default JobListItem;
 

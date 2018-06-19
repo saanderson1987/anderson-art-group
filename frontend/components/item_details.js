@@ -1,4 +1,5 @@
 import React from 'react';
+import get from 'lodash.get';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -47,15 +48,21 @@ class ItemDetails extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  if (ownProps.itemId) return {
-    item: state[ownProps.resource.name][ownProps.itemId]
-  };
+  const {subset, resource, itemId} = ownProps;
+  const item = subset ?
+      get(state[resource.name], [...subset, itemId], {})
+    : state[resource.name][itemId];
+  if (ownProps.itemId) return {item};
+  // if (ownProps.itemId) return {
+  //   item: state[ownProps.resource.name][ownProps.itemId]
+  // };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const {resource, subset, route} = ownProps;
   return {
-    getItemById: (id) => dispatch(ownProps.resource.getById(id)),
-    update: (record) => dispatch(ownProps.resource.update(record))
+    getItemById: (id) => dispatch(resource.getById(id, subset, route)),
+    update: (record) => dispatch(resource.update(record, subset, route))
   }
 }
 

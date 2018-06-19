@@ -76,6 +76,7 @@ class Model {
       table: this.table,
       id
     });
+    console.log(query);
     return this.returnIfIdExists(db.one(query));
   }
 
@@ -83,6 +84,7 @@ class Model {
     const columns = Object.keys(record);
     const colSet = new pgp.helpers.ColumnSet(columns, {table: this.tableString});
     const query = pgp.helpers.insert(record, colSet) + ' RETURNING *';
+    console.log(query);
     return db.one(query);
   }
 
@@ -92,6 +94,7 @@ class Model {
     const columns = Object.keys(record);
     const colSet = new pgp.helpers.ColumnSet(columns, {table: this.tableString});
     const query = pgp.helpers.update(record, colSet) + ' WHERE id = ' + record['?id'] + ' RETURNING *';
+    console.log(query);
     return this.returnIfIdExists(db.one(query));
   }
 
@@ -100,6 +103,7 @@ class Model {
       id: id,
       table: this.table
     })
+    console.log(query);
     return this.returnIfIdExists(db.one(query));
   }
 

@@ -10,11 +10,11 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.js$/, include: path.resolve(__dirname, "frontend"), exclude: /node_modules/, loader: "babel-loader" }
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
     ]
   },
   devtool: 'source-map'
 };
 
-
+// include: path.resolve(__dirname, "frontend"), 
 // entry: '/frontend/index.js',

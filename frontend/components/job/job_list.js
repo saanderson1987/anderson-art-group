@@ -3,12 +3,17 @@ import React from 'react';
 import List from '../list';
 import Job from '../../resources/job';
 import JobListItem from './job_list_item';
+import NewJobModal from './new_job_modal';
 
-const JobList = props => (
-  <List resource={Job} {...props}>
-    <JobListItem/>
-  </List>
-);
+const JobList = props => {
+  const resource = props.resource ? props.resource : Job;
+  return (
+    <List resource={resource} {...props}>
+      <JobListItem resource={resource} subset={props.subset} route={props.route}/>
+      <NewJobModal resource={resource} parentId={props.parentId} subset={props.subset} route={props.route}/>
+    </List>
+  );
+};
 
 export default JobList;
 

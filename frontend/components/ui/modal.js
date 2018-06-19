@@ -6,7 +6,6 @@ class Modal extends React.Component {
   }
 
   render() {
-    // const isVisible = this.props.isVisible ? '' : 'hidden';
     return (
       <div>
         <div className='modal-overlay' onClick={(e) => this.props.toggle()}></div>

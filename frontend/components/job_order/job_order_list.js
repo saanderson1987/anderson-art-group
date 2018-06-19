@@ -2,10 +2,12 @@ import React from 'react';
 import List from '../list';
 import JobOrder from '../../resources/job_order';
 import JobOrderListItem from './job_order_list_item';
+import NewJobOrderModal from './new_job_order_modal';
 
 const JobOrderList = props => (
   <List resource={JobOrder} columns={'created_at'} {...props}>
     <JobOrderListItem/>
+    <NewJobOrderModal/>
   </List>
 );
 

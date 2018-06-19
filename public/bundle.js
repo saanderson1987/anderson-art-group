@@ -178,10 +178,6 @@ var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/compone
 
 var _item_detail2 = _interopRequireDefault(_item_detail);
 
-var _company = __webpack_require__(/*! ../../resources/company */ "./frontend/resources/company.js");
-
-var _company2 = _interopRequireDefault(_company);
-
 var _job_list = __webpack_require__(/*! ../job/job_list */ "./frontend/components/job/job_list.js");
 
 var _job_list2 = _interopRequireDefault(_job_list);
@@ -193,55 +189,12 @@ var CompanyDetails = function CompanyDetails(props) {
     _item_details2.default,
     _extends({ resource: props.resource }, props),
     _react2.default.createElement(_item_detail2.default, { column: 'notes' }),
-    _react2.default.createElement(_job_list2.default, { parentId: props.itemId })
+    _react2.default.createElement(_job_list2.default, { query: { company_id: props.itemId }, parentId: props.itemId, subset: [props.itemId, 'jobs'], route: 'jobs', resource: props.resource })
   );
 };
-
 CompanyDetails.displayName = 'CompanyDetails';
+// query={{company_id: props.itemId}}
 exports.default = CompanyDetails;
-
-// class CompanyDetails extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.toggleExpansion = this.toggleExpansion.bind(this);
-//     this.state = {expanded: false};
-//   }
-//
-//   componentDidMount() {
-//     if (this.props.companyId) this.props.getCompanyById(this.props.companyId);
-//   }
-//
-//   toggleExpansion(e) {
-//     const expanded = this.state.expanded ? false : true;
-//     this.setState({expanded});
-//   }
-//
-//   render() {
-//     const company = this.props.company ? this.props.company : null;
-//     if (company) return (
-//       <div>
-//         <div>Notes: {company.notes}</div>
-//         <JobList companyId={this.props.companyId}/>
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = (state, ownProps) => {
-//   if (ownProps.companyId) return {
-//     // companies: Object.values(state.companies)
-//     company: state.companies[ownProps.companyId]
-//   };
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getCompanyById: (id) => dispatch(Company.getById(id)),
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CompanyDetails));
 
 /***/ }),
 
@@ -279,13 +232,19 @@ var _company_list_item = __webpack_require__(/*! ./company_list_item */ "./front
 
 var _company_list_item2 = _interopRequireDefault(_company_list_item);
 
+var _new_company_modal = __webpack_require__(/*! ./new_company_modal */ "./frontend/components/company/new_company_modal.js");
+
+var _new_company_modal2 = _interopRequireDefault(_new_company_modal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var CompanyList = function CompanyList(props) {
+  var resource = props.resource ? props.resource : _company2.default;
   return _react2.default.createElement(
     _list2.default,
-    _extends({ resource: props.resource }, props),
-    _react2.default.createElement(_company_list_item2.default, { resource: props.resource })
+    _extends({ resource: resource }, props),
+    _react2.default.createElement(_company_list_item2.default, { resource: resource }),
+    _react2.default.createElement(_new_company_modal2.default, null)
   );
 };
 
@@ -583,11 +542,11 @@ var NewCompanyModal = function (_React$Component) {
   _createClass(NewCompanyModal, [{
     key: 'render',
     value: function render() {
-
+      var resource = this.props.resource ? this.props.resource : _company2.default;
       return _react2.default.createElement(
         _modal2.default,
         this.props,
-        _react2.default.createElement(_new_item_form2.default, _extends({}, this.props, { resource: _company2.default, itemTypeName: 'Company', itemDetails: [{ columnName: 'name' }, { columnName: 'status', type: 'radio', values: [{ valueName: 'prospect' }, { valueName: 'client' }] }, { columnName: 'notes' }] }))
+        _react2.default.createElement(_new_item_form2.default, _extends({}, this.props, { resource: resource, itemTypeName: 'Company', itemDetails: [{ columnName: 'name' }, { columnName: 'status', type: 'radio', values: [{ valueName: 'prospect' }, { valueName: 'client' }] }, { columnName: 'notes' }] }))
       );
     }
   }]);
@@ -683,17 +642,35 @@ var ItemDetail = function (_React$Component) {
       var detailValue = this.state.inEditMode ? _react2.default.createElement('input', { type: 'text', value: this.state.detailValue, onChange: this.handleDetailValueChange }) : this.props.detailValue;
       var editIcons = this.state.inEditMode ? _react2.default.createElement(
         'div',
-        { className: 'icon-container save-cancel-icons' },
-        _react2.default.createElement('i', { className: 'check-icon far fa-check-circle', onClick: this.submitDetailUpdate }),
+        { className: 'save-cancel-buttons' },
         _react2.default.createElement(
-          'div',
-          { className: 'edit-detail-cancel', onClick: this.toggleEditMode },
+          'button',
+          { className: 'button--small', onClick: this.submitDetailUpdate },
+          _react2.default.createElement('i', { className: 'button-icon check-icon far fa-check-circle' }),
+          _react2.default.createElement(
+            'span',
+            null,
+            'Save'
+          )
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'button--small', onClick: this.toggleEditMode },
           'Cancel'
         )
       ) : _react2.default.createElement(
         'div',
-        { className: 'icon-container', onClick: this.toggleEditMode },
-        _react2.default.createElement('i', { className: 'pencil-icon fas fa-pencil-alt' })
+        { className: 'save-cancel-buttons' },
+        _react2.default.createElement(
+          'button',
+          { className: 'button--small', onClick: this.toggleEditMode },
+          _react2.default.createElement('i', { className: 'button-icon pencil-icon fas fa-pencil-alt' }),
+          _react2.default.createElement(
+            'span',
+            null,
+            'Edit'
+          )
+        )
       );
       var detailValueContainer = this.state.isDetailValueUpdating ? _react2.default.createElement('div', { className: 'loader inline' }) : _react2.default.createElement(
         'div',
@@ -747,11 +724,17 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -822,18 +805,28 @@ ItemDetails.displayName = 'ItemDetails';
 
 
 var mapStateToProps = function mapStateToProps(state, ownProps) {
-  if (ownProps.itemId) return {
-    item: state[ownProps.resource.name][ownProps.itemId]
-  };
+  var subset = ownProps.subset,
+      resource = ownProps.resource,
+      itemId = ownProps.itemId;
+
+  var item = subset ? (0, _lodash2.default)(state[resource.name], [].concat(_toConsumableArray(subset), [itemId]), {}) : state[resource.name][itemId];
+  if (ownProps.itemId) return { item: item };
+  // if (ownProps.itemId) return {
+  //   item: state[ownProps.resource.name][ownProps.itemId]
+  // };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  var resource = ownProps.resource,
+      subset = ownProps.subset,
+      route = ownProps.route;
+
   return {
     getItemById: function getItemById(id) {
-      return dispatch(ownProps.resource.getById(id));
+      return dispatch(resource.getById(id, subset, route));
     },
     update: function update(record) {
-      return dispatch(ownProps.resource.update(record));
+      return dispatch(resource.update(record, subset, route));
     }
   };
 };
@@ -883,7 +876,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var JobDetails = function JobDetails(props) {
   return _react2.default.createElement(
     _item_details2.default,
-    _extends({ resource: _job2.default }, props),
+    _extends({ resource: props.resource }, props),
     _react2.default.createElement(_item_detail2.default, { column: 'po_num', detailName: 'PO #' }),
     _react2.default.createElement(_job_order_list2.default, { parentId: props.itemId })
   );
@@ -970,13 +963,19 @@ var _job_list_item = __webpack_require__(/*! ./job_list_item */ "./frontend/comp
 
 var _job_list_item2 = _interopRequireDefault(_job_list_item);
 
+var _new_job_modal = __webpack_require__(/*! ./new_job_modal */ "./frontend/components/job/new_job_modal.js");
+
+var _new_job_modal2 = _interopRequireDefault(_new_job_modal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var JobList = function JobList(props) {
+  var resource = props.resource ? props.resource : _job2.default;
   return _react2.default.createElement(
     _list2.default,
-    _extends({ resource: _job2.default }, props),
-    _react2.default.createElement(_job_list_item2.default, null)
+    _extends({ resource: resource }, props),
+    _react2.default.createElement(_job_list_item2.default, { resource: resource, subset: props.subset, route: props.route }),
+    _react2.default.createElement(_new_job_modal2.default, { resource: resource, parentId: props.parentId, subset: props.subset, route: props.route })
   );
 };
 
@@ -1105,7 +1104,7 @@ var JobListItem = function JobListItem(props) {
   return _react2.default.createElement(
     _list_item2.default,
     _extends({ name: props.item.name }, props),
-    _react2.default.createElement(_job_details2.default, { itemId: props.item.id })
+    _react2.default.createElement(_job_details2.default, { itemId: props.item.id, resource: props.resource, subset: props.subset, route: props.route })
   );
 };
 
@@ -1147,6 +1146,84 @@ exports.default = JobListItem;
 // }
 //
 // export default JobListItem;
+
+/***/ }),
+
+/***/ "./frontend/components/job/new_job_modal.js":
+/*!**************************************************!*\
+  !*** ./frontend/components/job/new_job_modal.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _job = __webpack_require__(/*! ../../resources/job */ "./frontend/resources/job.js");
+
+var _job2 = _interopRequireDefault(_job);
+
+var _modal = __webpack_require__(/*! ../ui/modal */ "./frontend/components/ui/modal.js");
+
+var _modal2 = _interopRequireDefault(_modal);
+
+var _new_item_form = __webpack_require__(/*! ../new_item_form */ "./frontend/components/new_item_form.js");
+
+var _new_item_form2 = _interopRequireDefault(_new_item_form);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NewJobModal = function (_React$Component) {
+  _inherits(NewJobModal, _React$Component);
+
+  function NewJobModal(props) {
+    _classCallCheck(this, NewJobModal);
+
+    return _possibleConstructorReturn(this, (NewJobModal.__proto__ || Object.getPrototypeOf(NewJobModal)).call(this, props));
+  }
+
+  _createClass(NewJobModal, [{
+    key: 'render',
+    value: function render() {
+      var resource = this.props.resource ? this.props.resource : _job2.default;
+      var _props = this.props,
+          parentId = _props.parentId,
+          subset = _props.subset,
+          route = _props.route;
+
+      return _react2.default.createElement(
+        _modal2.default,
+        this.props,
+        _react2.default.createElement(_new_item_form2.default, _extends({}, this.props, { parent: { id: parentId, column: 'company_id' },
+          resource: resource, subset: subset, route: route, itemTypeName: 'Job',
+          itemDetails: [{ columnName: 'name' }, { columnName: 'po_num', detailName: 'PO #' }] }))
+      );
+    }
+  }]);
+
+  return NewJobModal;
+}(_react2.default.Component);
+
+NewJobModal.displayName = 'NewJobModal';
+exports.default = NewJobModal;
 
 /***/ }),
 
@@ -1270,13 +1347,18 @@ var _job_order_list_item = __webpack_require__(/*! ./job_order_list_item */ "./f
 
 var _job_order_list_item2 = _interopRequireDefault(_job_order_list_item);
 
+var _new_job_order_modal = __webpack_require__(/*! ./new_job_order_modal */ "./frontend/components/job_order/new_job_order_modal.js");
+
+var _new_job_order_modal2 = _interopRequireDefault(_new_job_order_modal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var JobOrderList = function JobOrderList(props) {
   return _react2.default.createElement(
     _list2.default,
     _extends({ resource: _job_order2.default, columns: 'created_at' }, props),
-    _react2.default.createElement(_job_order_list_item2.default, null)
+    _react2.default.createElement(_job_order_list_item2.default, null),
+    _react2.default.createElement(_new_job_order_modal2.default, null)
   );
 };
 
@@ -1413,6 +1495,77 @@ exports.default = JobOrderListItem;
 
 /***/ }),
 
+/***/ "./frontend/components/job_order/new_job_order_modal.js":
+/*!**************************************************************!*\
+  !*** ./frontend/components/job_order/new_job_order_modal.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _job_order = __webpack_require__(/*! ../../resources/job_order */ "./frontend/resources/job_order.js");
+
+var _job_order2 = _interopRequireDefault(_job_order);
+
+var _modal = __webpack_require__(/*! ../ui/modal */ "./frontend/components/ui/modal.js");
+
+var _modal2 = _interopRequireDefault(_modal);
+
+var _new_item_form = __webpack_require__(/*! ../new_item_form */ "./frontend/components/new_item_form.js");
+
+var _new_item_form2 = _interopRequireDefault(_new_item_form);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NewJobOrderModal = function (_React$Component) {
+  _inherits(NewJobOrderModal, _React$Component);
+
+  function NewJobOrderModal(props) {
+    _classCallCheck(this, NewJobOrderModal);
+
+    return _possibleConstructorReturn(this, (NewJobOrderModal.__proto__ || Object.getPrototypeOf(NewJobOrderModal)).call(this, props));
+  }
+
+  _createClass(NewJobOrderModal, [{
+    key: 'render',
+    value: function render() {
+
+      return _react2.default.createElement(
+        _modal2.default,
+        this.props,
+        _react2.default.createElement(_new_item_form2.default, _extends({}, this.props, { resource: Company, itemTypeName: 'Company', itemDetails: [{ columnName: 'name' }, { columnName: 'notes' }] }))
+      );
+    }
+  }]);
+
+  return NewJobOrderModal;
+}(_react2.default.Component);
+
+NewJobOrderModal.displayName = 'NewJobOrderModal';
+exports.default = NewJobOrderModal;
+
+/***/ }),
+
 /***/ "./frontend/components/list.js":
 /*!*************************************!*\
   !*** ./frontend/components/list.js ***!
@@ -1435,6 +1588,12 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _functions = __webpack_require__(/*! ../../util/functions */ "./util/functions.js");
+
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
@@ -1443,9 +1602,11 @@ var _new_company_modal = __webpack_require__(/*! ./company/new_company_modal */ 
 
 var _new_company_modal2 = _interopRequireDefault(_new_company_modal);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _company_list_item = __webpack_require__(/*! ./company/company_list_item */ "./frontend/components/company/company_list_item.js");
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var _company_list_item2 = _interopRequireDefault(_company_list_item);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1462,7 +1623,6 @@ var List = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this, props));
 
     _this.toggleNewItemModal = _this.toggleNewItemModal.bind(_this);
-    _this.toggle = _this.toggle.bind(_this);
     _this.state = {
       location: props.location.pathname,
       isNewItemModalVisible: false
@@ -1482,53 +1642,41 @@ var List = function (_React$Component) {
     }
   }, {
     key: 'toggleNewItemModal',
-    value: function toggleNewItemModal(options) {
-      // let isNewItemModalVisible;
-      // if (options.isVisible) isNewItemModalVisible = options.isVisible;
-      // else isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
-      // this.setState({isNewItemModalVisible});
+    value: function toggleNewItemModal() {
       var isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
       this.setState({ isNewItemModalVisible: isNewItemModalVisible });
-    }
-  }, {
-    key: 'toggle',
-    value: function toggle(options) {
-      var isItemVisible = 'is' + options.modal + 'ModalVisible';
-      var isVisible = void 0;
-      if (options.isVisible) isVisible = options.isVisible;else isVisible = this.state[isItemVisible] ? false : true;
-      this.setState(_defineProperty({}, isItemVisible, isVisible));
-    }
-  }, {
-    key: 'onClickModalOverlay',
-    value: function onClickModalOverlay(e) {
-      this.toggle({ modal: 'NewItem', isVisible: false });
-      this.toggle({ modal: 'Warning', isVisible: true });
     }
   }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
 
-      var listName = this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
+      var listName = this.props.route ? (0, _functions.capitalize)(this.props.route) : (0, _functions.capitalize)(this.props.resource.name);
+      // this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
       var listNameElement = this.props.root ? null : _react2.default.createElement(
         'div',
         { className: 'list-name' },
         listName,
         ':'
       );
-
+      var listItemElement = void 0;
+      var newItemModalElement = void 0;
+      _react2.default.Children.forEach(this.props.children, function (child) {
+        if (child.type.displayName.slice(-8) === 'ListItem') listItemElement = child;
+        if (child.type.displayName.slice(-5) === 'Modal') newItemModalElement = child;
+      });
       var items = this.props.items;
       var itemList = items.map(function (item, idx) {
         var isFirst = idx === 0;
-        return _react2.default.cloneElement(_this2.props.children, { item: item, isFirst: isFirst, key: item.id });
+        return _react2.default.cloneElement(listItemElement, { item: item, isFirst: isFirst, key: item.id });
       });
-
-      var newCompanyModal = this.state.isNewItemModalVisible ? _react2.default.createElement(_new_company_modal2.default, {
+      var newItemModal = this.state.isNewItemModalVisible ? _react2.default.cloneElement(newItemModalElement, {
         isVisible: this.state.isNewItemModalVisible,
         toggle: this.toggleNewItemModal
       }) : null;
 
       var isRoot = this.props.root ? 'list-items--root' : '';
+      var buttonContainer = this.props.root ? 'root-list-new-button-container' : '';
 
       return _react2.default.createElement(
         'div',
@@ -1538,20 +1686,24 @@ var List = function (_React$Component) {
           'div',
           { className: 'list-items ' + isRoot },
           _react2.default.createElement(
-            'button',
-            { className: 'button--new', onClick: function onClick(e) {
-                return _this2.toggleNewItemModal();
-              } },
-            _react2.default.createElement('i', { className: 'fas fa-plus-circle' }),
+            'div',
+            { className: buttonContainer },
             _react2.default.createElement(
-              'span',
-              null,
-              'Create new'
+              'button',
+              { className: 'button--new', onClick: function onClick(e) {
+                  return _this2.toggleNewItemModal();
+                } },
+              _react2.default.createElement('i', { className: 'fas fa-plus-circle' }),
+              _react2.default.createElement(
+                'span',
+                null,
+                'Create new'
+              )
             )
           ),
           itemList
         ),
-        newCompanyModal
+        newItemModal
       );
     }
   }]);
@@ -1563,73 +1715,25 @@ List.displayName = 'List';
 
 
 var mapStateToProps = function mapStateToProps(state, ownProps) {
+  var items = ownProps.subset ? (0, _lodash2.default)(state[ownProps.resource.name], ownProps.subset, {}) : state[ownProps.resource.name];
   return {
-    items: Object.values(state[ownProps.resource.name])
+    items: Object.values(items)
   };
 };
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
   var columns = ownProps.columns ? ownProps.columns : 'name';
   var query = ownProps.query ? ownProps.query : {};
+  var subset = ownProps.subset,
+      route = ownProps.route;
+
   return {
     getAll: function getAll() {
-      return dispatch(ownProps.resource.getByQuery(_extends({ columns: columns }, query)));
+      return dispatch(ownProps.resource.getByQuery(_extends({ columns: columns }, query), subset, route));
     }
   };
 };
 
 exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(List));
-
-// <button onClick={function() {createNew(newJob);}}>Create new {this.props.itemName}</button>
-
-// function makeList (resource, ListItem) {
-//   const mapStateToProps = state => {
-//     return {
-//       items: Object.values(state[resource.name])
-//     }
-//   };
-//   const mapDispatchToProps = dispatch => {
-//     return {
-//       getAll: () => dispatch(resource.all()),
-//       createNew: (item) => dispatch(resource.create(item))
-//     }
-//   };
-//   class List extends React.Component {
-//     constructor(props) {
-//       super(props);
-//     }
-//
-//     componentDidMount() {
-//       this.props.getAll();
-//     }
-//
-//     render() {
-//       const newJob = {
-//         name: 'TestJob5',
-//         po_num: '123ABC',
-//         company_id: 1
-//       };
-//       const listName = resource.name[0].toUpperCase() + resource.name.slice(1);
-//       const createNew = this.props.createNew;
-//       const items = this.props.items;
-//       const itemList = items.map(item => {
-//         return <ListItem item={item}/>
-//       });
-//       return (
-//         <div>
-//           {listName}:
-//           <ul>
-//             {itemList}
-//           </ul>
-//           <button onClick={function() {createNew(newJob);}}>Create new {this.props.itemName}</button>
-//         </div>
-//       );
-//     }
-//   }
-//
-//   return withRouter(connect(mapStateToProps, mapDispatchToProps)(List));
-// }
-//
-// export default makeList;
 
 /***/ }),
 
@@ -1653,6 +1757,14 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+var _delete_warning = __webpack_require__(/*! ./ui/delete_warning */ "./frontend/components/ui/delete_warning.js");
+
+var _delete_warning2 = _interopRequireDefault(_delete_warning);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1670,7 +1782,12 @@ var ListItem = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call(this, props));
 
     _this.toggleExpansion = _this.toggleExpansion.bind(_this);
-    _this.state = { expanded: false };
+    _this.onClickDelete = _this.onClickDelete.bind(_this);
+    _this.toggleDeleteWarning = _this.toggleDeleteWarning.bind(_this);
+    _this.state = {
+      expanded: false,
+      isDeleteWarningVisible: false
+    };
     return _this;
   }
 
@@ -1681,27 +1798,59 @@ var ListItem = function (_React$Component) {
       this.setState({ expanded: expanded });
     }
   }, {
+    key: 'onClickDelete',
+    value: function onClickDelete() {
+      this.setState({ isDeleteWarningVisible: true });
+      // this.props.delete(this.props.item.id);
+    }
+  }, {
+    key: 'toggleDeleteWarning',
+    value: function toggleDeleteWarning() {
+      var isDeleteWarningVisible = this.state.isDeleteWarningVisible ? false : true;
+      this.setState({ isDeleteWarningVisible: isDeleteWarningVisible });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var isFirst = this.props.isFirst ? 'list-item--first' : '';
       var isExpanded = this.state.expanded ? 'bold' : '';
       var caret = this.state.expanded ? _react2.default.createElement('i', { className: 'fas fa-caret-down' }) : _react2.default.createElement('i', { className: 'fas fa-caret-right' });
-      var details = this.state.expanded ? this.props.children : null;
+      var deleteButton = this.state.expanded ? _react2.default.createElement(
+        'button',
+        { className: 'button--small', onClick: this.onClickDelete },
+        'Delete'
+      ) : null;
+      var itemDetails = this.state.expanded ? this.props.children : null;
+      var deleteWarning = this.state.isDeleteWarningVisible ? _react2.default.createElement(_delete_warning2.default, {
+        itemName: this.props.name,
+        toggle: this.toggleDeleteWarning,
+        'delete': function _delete() {
+          return _this2.props.delete(_this2.props.item.id);
+        }
+      }) : null;
 
       return _react2.default.createElement(
         'div',
         { className: 'list-item ' + isFirst },
         _react2.default.createElement(
           'div',
-          { className: 'list-item-label ' + isExpanded, onClick: this.toggleExpansion },
-          caret,
+          { className: 'list-item-header' },
           _react2.default.createElement(
-            'span',
-            null,
-            this.props.name
-          )
+            'div',
+            { className: 'list-item-label ' + isExpanded, onClick: this.toggleExpansion },
+            caret,
+            _react2.default.createElement(
+              'span',
+              null,
+              this.props.name
+            )
+          ),
+          deleteButton
         ),
-        details
+        itemDetails,
+        deleteWarning
       );
     }
   }]);
@@ -1710,7 +1859,21 @@ var ListItem = function (_React$Component) {
 }(_react2.default.Component);
 
 ListItem.displayName = 'ListItem';
-exports.default = ListItem;
+
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  var resource = ownProps.resource,
+      subset = ownProps.subset,
+      route = ownProps.route;
+
+  return {
+    delete: function _delete(id) {
+      return dispatch(resource.delete(id, subset, route));
+    }
+  };
+};
+
+exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(null, mapDispatchToProps)(ListItem));
 
 /***/ }),
 
@@ -1839,7 +2002,7 @@ var NewItemDetail = function (_React$Component) {
       var _this2 = this;
 
       var columnName = this.props.itemDetail.columnName;
-      var detailName = this.props.itemDetail.detailName ? this.props.detailName + ':' : columnName.charAt(0).toUpperCase() + columnName.slice(1) + ':';
+      var detailName = this.props.itemDetail.detailName ? this.props.itemDetail.detailName + ':' : columnName.charAt(0).toUpperCase() + columnName.slice(1) + ':';
 
       var input = _react2.default.createElement('input', { type: 'text', value: this.props.detailValue, onChange: this.props.onValueChange(columnName) });
       switch (this.props.itemDetail.type) {
@@ -1961,6 +2124,7 @@ var NewItemForm = function (_React$Component) {
       this.props.itemDetails.forEach(function (itemDetail) {
         record[itemDetail.columnName] = _this3.state[itemDetail.columnName];
       });
+      if (this.props.parent) record[this.props.parent.column] = this.props.parent.id;
       this.props.create(record);
       this.props.toggle();
     }
@@ -2019,9 +2183,12 @@ NewItemForm.displayName = 'NewItemForm';
 
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  var subset = ownProps.subset,
+      route = ownProps.route;
+
   return {
     create: function create(record) {
-      return dispatch(ownProps.resource.create(record));
+      return dispatch(ownProps.resource.create(record, subset, route));
     }
   };
 };
@@ -2238,6 +2405,96 @@ exports.default = Tabs;
 
 /***/ }),
 
+/***/ "./frontend/components/ui/delete_warning.js":
+/*!**************************************************!*\
+  !*** ./frontend/components/ui/delete_warning.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _modal = __webpack_require__(/*! ./modal */ "./frontend/components/ui/modal.js");
+
+var _modal2 = _interopRequireDefault(_modal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DeleteWarning = function (_React$Component) {
+  _inherits(DeleteWarning, _React$Component);
+
+  function DeleteWarning(props) {
+    _classCallCheck(this, DeleteWarning);
+
+    return _possibleConstructorReturn(this, (DeleteWarning.__proto__ || Object.getPrototypeOf(DeleteWarning)).call(this, props));
+  }
+
+  _createClass(DeleteWarning, [{
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        _modal2.default,
+        this.props,
+        _react2.default.createElement(
+          'div',
+          { className: 'warning' },
+          _react2.default.createElement(
+            'div',
+            { className: 'warning-text' },
+            'Are you sure you want to delete ',
+            this.props.itemName,
+            '?'
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'button-row' },
+            _react2.default.createElement(
+              'button',
+              { className: 'button--delete', onClick: function onClick(e) {
+                  return _this2.props.delete();
+                } },
+              'Delete'
+            ),
+            _react2.default.createElement(
+              'button',
+              { onClick: function onClick(e) {
+                  return _this2.props.toggle();
+                } },
+              'Cancel'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return DeleteWarning;
+}(_react2.default.Component);
+
+DeleteWarning.displayName = 'DeleteWarning';
+exports.default = DeleteWarning;
+
+/***/ }),
+
 /***/ "./frontend/components/ui/modal.js":
 /*!*****************************************!*\
   !*** ./frontend/components/ui/modal.js ***!
@@ -2280,7 +2537,6 @@ var Modal = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      // const isVisible = this.props.isVisible ? '' : 'hidden';
       return _react2.default.createElement(
         'div',
         null,
@@ -2384,6 +2640,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _resource = __webpack_require__(/*! ./resource */ "./frontend/resources/resource.js");
 
 var _resource2 = _interopRequireDefault(_resource);
@@ -2394,17 +2654,33 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ClientCompany = new _resource2.default('companies', 'clients');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-ClientCompany.getByQuery = function (queryParams) {
-  var subset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'LAST_QUERY';
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  if (queryParams && !queryParams.status) queryParams.status = 'client';
-  return this.send(_axios2.default.get(this.baseRoute + '/clients', {
-    params: queryParams
-  }), this.name.toUpperCase() + '_GET_MANY');
-};
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var ClientCompanyResource = function (_Resource) {
+  _inherits(ClientCompanyResource, _Resource);
+
+  function ClientCompanyResource() {
+    _classCallCheck(this, ClientCompanyResource);
+
+    return _possibleConstructorReturn(this, (ClientCompanyResource.__proto__ || Object.getPrototypeOf(ClientCompanyResource)).apply(this, arguments));
+  }
+
+  _createClass(ClientCompanyResource, [{
+    key: 'getByQuery',
+    value: function getByQuery(queryParams, subset, route) {
+      if (!route) queryParams.status = 'client';
+      return _get(ClientCompanyResource.prototype.__proto__ || Object.getPrototypeOf(ClientCompanyResource.prototype), 'getByQuery', this).call(this, queryParams, subset, route);
+    }
+  }]);
+
+  return ClientCompanyResource;
+}(_resource2.default);
+
+var ClientCompany = new ClientCompanyResource('companies', 'clients');
 exports.default = ClientCompany;
 
 /***/ }),
@@ -2498,6 +2774,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _resource = __webpack_require__(/*! ./resource */ "./frontend/resources/resource.js");
 
 var _resource2 = _interopRequireDefault(_resource);
@@ -2508,17 +2788,33 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ProspectCompany = new _resource2.default('companies', 'prospects');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-ProspectCompany.getByQuery = function (queryParams) {
-  var subset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'LAST_QUERY';
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  if (queryParams && !queryParams.status) queryParams.status = 'prospect';
-  return this.send(_axios2.default.get(this.baseRoute + '/prospects', {
-    params: queryParams
-  }), this.name.toUpperCase() + '_GET_MANY');
-};
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var ProspectCompanyResource = function (_Resource) {
+  _inherits(ProspectCompanyResource, _Resource);
+
+  function ProspectCompanyResource() {
+    _classCallCheck(this, ProspectCompanyResource);
+
+    return _possibleConstructorReturn(this, (ProspectCompanyResource.__proto__ || Object.getPrototypeOf(ProspectCompanyResource)).apply(this, arguments));
+  }
+
+  _createClass(ProspectCompanyResource, [{
+    key: 'getByQuery',
+    value: function getByQuery(queryParams, subset, route) {
+      if (!route) queryParams.status = 'prospect';
+      return _get(ProspectCompanyResource.prototype.__proto__ || Object.getPrototypeOf(ProspectCompanyResource.prototype), 'getByQuery', this).call(this, queryParams, subset, route);
+    }
+  }]);
+
+  return ProspectCompanyResource;
+}(_resource2.default);
+
+var ProspectCompany = new ProspectCompanyResource('companies', 'prospects');
 exports.default = ProspectCompany;
 
 /***/ }),
@@ -2571,6 +2867,10 @@ var Resource = function () {
       return (0, _lodash2.default)({}, oldState, newData);
     }), _defineProperty(_actions, this.name.toUpperCase() + '_GET_ONE', function undefined(oldState, newData) {
       return (0, _lodash2.default)({}, oldState, _defineProperty({}, newData.id, newData));
+    }), _defineProperty(_actions, this.name.toUpperCase() + '_DELETE_ONE', function undefined(oldState, newData) {
+      var newState = (0, _lodash2.default)({}, oldState);
+      delete newState[newData.id];
+      return newState;
     }), _actions);
   }
 
@@ -2581,41 +2881,78 @@ var Resource = function () {
     }
   }, {
     key: 'getByQuery',
-    value: function getByQuery(queryParams) {
-      var subset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'LAST_QUERY';
-
-      // subset = subset.toUpperCase();
-      // this.setAction(subset);
-      return this.send(_axios2.default.get(this.baseRoute, {
+    value: function getByQuery(queryParams, subset, route) {
+      var actionName = subset ? this.createAction(subset, 'GET_MANY') : this.name.toUpperCase() + '_GET_MANY';
+      route = route ? '/api/' + route : this.baseRoute;
+      return this.send(_axios2.default.get(route, {
         params: queryParams
-      }), this.name.toUpperCase() + '_GET_MANY');
+      }), actionName);
     }
   }, {
-    key: 'setAction',
-    value: function setAction(subset) {
-      this.actions[this.name.toUpperCase() + '_' + subset + '_GET_MANY'] = function (oldState, newData) {
-        return (0, _lodash2.default)({}, oldState, _defineProperty({}, subset.toLowerCase(), newData));
-      };
+    key: 'createAction',
+    value: function createAction(subset, type) {
+      var actionName = this.name.toUpperCase() + '_' + subset[subset.length - 1].toUpperCase() + '_' + type;
+      var newObject = {};
+      switch (type) {
+        case 'GET_MANY':
+          // actionName = `${this.name.toUpperCase()}_${subset[subset.length - 1].toUpperCase()}_GET_MANY`
+          this.actions[actionName] = function (oldState, newData) {
+            // const newObj = {};
+            // let last = newObj;
+            // subset.forEach((pathName, idx) => {
+            //   if (idx === subset.length - 1) last[pathName] = newData;
+            //   else last[pathName] = {};
+            //   last = last[pathName];
+            // });
+            setValue(newObject, subset, newData);
+            return (0, _lodash2.default)({}, oldState, newObject);
+          };
+          break;
+        case 'GET_ONE':
+          this.actions[actionName] = function (oldState, newData) {
+            subset.push(newData.id);
+            setValue(newObject, subset, newData);
+            return (0, _lodash2.default)({}, oldState, newObject);
+          };
+          break;
+      }
+
+      function setValue(object, path, value) {
+        var last = object;
+        path.forEach(function (pathName, idx) {
+          if (idx === path.length - 1) last[pathName] = value;else last[pathName] = {};
+          last = last[pathName];
+        });
+      }
+
+      return actionName;
     }
   }, {
     key: 'getById',
-    value: function getById(id) {
-      return this.send(_axios2.default.get(this.baseRoute + '/' + id), this.name.toUpperCase() + '_GET_ONE');
+    value: function getById(id, subset, route) {
+      var actionName = subset ? this.createAction(subset, 'GET_ONE') : this.name.toUpperCase() + '_GET_ONE';
+      route = route ? '/api/' + route + '/' + id : this.baseRoute + '/' + id;
+      return this.send(_axios2.default.get(route), actionName);
     }
   }, {
     key: 'create',
-    value: function create(record) {
-      return this.send(_axios2.default.post(this.baseRoute, record), this.name.toUpperCase() + '_GET_ONE');
+    value: function create(record, subset, route) {
+      var actionName = subset ? this.createAction(subset, 'GET_ONE') : this.name.toUpperCase() + '_GET_ONE';
+      route = route ? '/api/' + route : this.baseRoute;
+      return this.send(_axios2.default.post(route, record), actionName);
     }
   }, {
     key: 'update',
-    value: function update(record) {
-      return this.send(_axios2.default.put(this.baseRoute + '/' + record.id, record), this.name.toUpperCase() + '_GET_ONE');
+    value: function update(record, subset, route) {
+      var actionName = subset ? this.createAction(subset, 'GET_ONE') : this.name.toUpperCase() + '_GET_ONE';
+      route = route ? '/api/' + route + '/' + record.id : this.baseRoute + '/' + record.id;
+      return this.send(_axios2.default.put(route, record), actionName);
     }
   }, {
     key: 'delete',
-    value: function _delete(id) {
-      return this.send(_axios2.default.delete(this.baseRoute + '/' + id), 'DELETE_ONE');
+    value: function _delete(id, subset, route) {
+      var actionName = subset ? this.createAction(subset, 'DELETE_ONE') : this.name.toUpperCase() + '_DELETE_ONE';
+      return this.send(_axios2.default.delete(this.baseRoute + '/' + id), this.name.toUpperCase() + '_DELETE_ONE');
     }
   }, {
     key: 'send',
@@ -7964,6 +8301,949 @@ function isPlainObject(value) {
 
 /* harmony default export */ __webpack_exports__["default"] = (isPlainObject);
 
+
+/***/ }),
+
+/***/ "./node_modules/lodash.get/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash.get/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/** Used to stand-in for `undefined` hash values. */
+var HASH_UNDEFINED = '__lodash_hash_undefined__';
+
+/** Used as references for various `Number` constants. */
+var INFINITY = 1 / 0;
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    symbolTag = '[object Symbol]';
+
+/** Used to match property names within property paths. */
+var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
+    reIsPlainProp = /^\w*$/,
+    reLeadingDot = /^\./,
+    rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+
+/**
+ * Used to match `RegExp`
+ * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
+ */
+var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+
+/** Used to match backslashes in property paths. */
+var reEscapeChar = /\\(\\)?/g;
+
+/** Used to detect host constructors (Safari). */
+var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+/**
+ * Gets the value at `key` of `object`.
+ *
+ * @private
+ * @param {Object} [object] The object to query.
+ * @param {string} key The key of the property to get.
+ * @returns {*} Returns the property value.
+ */
+function getValue(object, key) {
+  return object == null ? undefined : object[key];
+}
+
+/**
+ * Checks if `value` is a host object in IE < 9.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+ */
+function isHostObject(value) {
+  // Many host objects are `Object` objects that can coerce to strings
+  // despite having improperly defined `toString` methods.
+  var result = false;
+  if (value != null && typeof value.toString != 'function') {
+    try {
+      result = !!(value + '');
+    } catch (e) {}
+  }
+  return result;
+}
+
+/** Used for built-in method references. */
+var arrayProto = Array.prototype,
+    funcProto = Function.prototype,
+    objectProto = Object.prototype;
+
+/** Used to detect overreaching core-js shims. */
+var coreJsData = root['__core-js_shared__'];
+
+/** Used to detect methods masquerading as native. */
+var maskSrcKey = (function() {
+  var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+  return uid ? ('Symbol(src)_1.' + uid) : '';
+}());
+
+/** Used to resolve the decompiled source of functions. */
+var funcToString = funcProto.toString;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/** Used to detect if a method is native. */
+var reIsNative = RegExp('^' +
+  funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&')
+  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+);
+
+/** Built-in value references. */
+var Symbol = root.Symbol,
+    splice = arrayProto.splice;
+
+/* Built-in method references that are verified to be native. */
+var Map = getNative(root, 'Map'),
+    nativeCreate = getNative(Object, 'create');
+
+/** Used to convert symbols to primitives and strings. */
+var symbolProto = Symbol ? Symbol.prototype : undefined,
+    symbolToString = symbolProto ? symbolProto.toString : undefined;
+
+/**
+ * Creates a hash object.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function Hash(entries) {
+  var index = -1,
+      length = entries ? entries.length : 0;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+/**
+ * Removes all key-value entries from the hash.
+ *
+ * @private
+ * @name clear
+ * @memberOf Hash
+ */
+function hashClear() {
+  this.__data__ = nativeCreate ? nativeCreate(null) : {};
+}
+
+/**
+ * Removes `key` and its value from the hash.
+ *
+ * @private
+ * @name delete
+ * @memberOf Hash
+ * @param {Object} hash The hash to modify.
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+ */
+function hashDelete(key) {
+  return this.has(key) && delete this.__data__[key];
+}
+
+/**
+ * Gets the hash value for `key`.
+ *
+ * @private
+ * @name get
+ * @memberOf Hash
+ * @param {string} key The key of the value to get.
+ * @returns {*} Returns the entry value.
+ */
+function hashGet(key) {
+  var data = this.__data__;
+  if (nativeCreate) {
+    var result = data[key];
+    return result === HASH_UNDEFINED ? undefined : result;
+  }
+  return hasOwnProperty.call(data, key) ? data[key] : undefined;
+}
+
+/**
+ * Checks if a hash value for `key` exists.
+ *
+ * @private
+ * @name has
+ * @memberOf Hash
+ * @param {string} key The key of the entry to check.
+ * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+ */
+function hashHas(key) {
+  var data = this.__data__;
+  return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
+}
+
+/**
+ * Sets the hash `key` to `value`.
+ *
+ * @private
+ * @name set
+ * @memberOf Hash
+ * @param {string} key The key of the value to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns the hash instance.
+ */
+function hashSet(key, value) {
+  var data = this.__data__;
+  data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
+  return this;
+}
+
+// Add methods to `Hash`.
+Hash.prototype.clear = hashClear;
+Hash.prototype['delete'] = hashDelete;
+Hash.prototype.get = hashGet;
+Hash.prototype.has = hashHas;
+Hash.prototype.set = hashSet;
+
+/**
+ * Creates an list cache object.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function ListCache(entries) {
+  var index = -1,
+      length = entries ? entries.length : 0;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+/**
+ * Removes all key-value entries from the list cache.
+ *
+ * @private
+ * @name clear
+ * @memberOf ListCache
+ */
+function listCacheClear() {
+  this.__data__ = [];
+}
+
+/**
+ * Removes `key` and its value from the list cache.
+ *
+ * @private
+ * @name delete
+ * @memberOf ListCache
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+ */
+function listCacheDelete(key) {
+  var data = this.__data__,
+      index = assocIndexOf(data, key);
+
+  if (index < 0) {
+    return false;
+  }
+  var lastIndex = data.length - 1;
+  if (index == lastIndex) {
+    data.pop();
+  } else {
+    splice.call(data, index, 1);
+  }
+  return true;
+}
+
+/**
+ * Gets the list cache value for `key`.
+ *
+ * @private
+ * @name get
+ * @memberOf ListCache
+ * @param {string} key The key of the value to get.
+ * @returns {*} Returns the entry value.
+ */
+function listCacheGet(key) {
+  var data = this.__data__,
+      index = assocIndexOf(data, key);
+
+  return index < 0 ? undefined : data[index][1];
+}
+
+/**
+ * Checks if a list cache value for `key` exists.
+ *
+ * @private
+ * @name has
+ * @memberOf ListCache
+ * @param {string} key The key of the entry to check.
+ * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+ */
+function listCacheHas(key) {
+  return assocIndexOf(this.__data__, key) > -1;
+}
+
+/**
+ * Sets the list cache `key` to `value`.
+ *
+ * @private
+ * @name set
+ * @memberOf ListCache
+ * @param {string} key The key of the value to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns the list cache instance.
+ */
+function listCacheSet(key, value) {
+  var data = this.__data__,
+      index = assocIndexOf(data, key);
+
+  if (index < 0) {
+    data.push([key, value]);
+  } else {
+    data[index][1] = value;
+  }
+  return this;
+}
+
+// Add methods to `ListCache`.
+ListCache.prototype.clear = listCacheClear;
+ListCache.prototype['delete'] = listCacheDelete;
+ListCache.prototype.get = listCacheGet;
+ListCache.prototype.has = listCacheHas;
+ListCache.prototype.set = listCacheSet;
+
+/**
+ * Creates a map cache object to store key-value pairs.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function MapCache(entries) {
+  var index = -1,
+      length = entries ? entries.length : 0;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+/**
+ * Removes all key-value entries from the map.
+ *
+ * @private
+ * @name clear
+ * @memberOf MapCache
+ */
+function mapCacheClear() {
+  this.__data__ = {
+    'hash': new Hash,
+    'map': new (Map || ListCache),
+    'string': new Hash
+  };
+}
+
+/**
+ * Removes `key` and its value from the map.
+ *
+ * @private
+ * @name delete
+ * @memberOf MapCache
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+ */
+function mapCacheDelete(key) {
+  return getMapData(this, key)['delete'](key);
+}
+
+/**
+ * Gets the map value for `key`.
+ *
+ * @private
+ * @name get
+ * @memberOf MapCache
+ * @param {string} key The key of the value to get.
+ * @returns {*} Returns the entry value.
+ */
+function mapCacheGet(key) {
+  return getMapData(this, key).get(key);
+}
+
+/**
+ * Checks if a map value for `key` exists.
+ *
+ * @private
+ * @name has
+ * @memberOf MapCache
+ * @param {string} key The key of the entry to check.
+ * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+ */
+function mapCacheHas(key) {
+  return getMapData(this, key).has(key);
+}
+
+/**
+ * Sets the map `key` to `value`.
+ *
+ * @private
+ * @name set
+ * @memberOf MapCache
+ * @param {string} key The key of the value to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns the map cache instance.
+ */
+function mapCacheSet(key, value) {
+  getMapData(this, key).set(key, value);
+  return this;
+}
+
+// Add methods to `MapCache`.
+MapCache.prototype.clear = mapCacheClear;
+MapCache.prototype['delete'] = mapCacheDelete;
+MapCache.prototype.get = mapCacheGet;
+MapCache.prototype.has = mapCacheHas;
+MapCache.prototype.set = mapCacheSet;
+
+/**
+ * Gets the index at which the `key` is found in `array` of key-value pairs.
+ *
+ * @private
+ * @param {Array} array The array to inspect.
+ * @param {*} key The key to search for.
+ * @returns {number} Returns the index of the matched value, else `-1`.
+ */
+function assocIndexOf(array, key) {
+  var length = array.length;
+  while (length--) {
+    if (eq(array[length][0], key)) {
+      return length;
+    }
+  }
+  return -1;
+}
+
+/**
+ * The base implementation of `_.get` without support for default values.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Array|string} path The path of the property to get.
+ * @returns {*} Returns the resolved value.
+ */
+function baseGet(object, path) {
+  path = isKey(path, object) ? [path] : castPath(path);
+
+  var index = 0,
+      length = path.length;
+
+  while (object != null && index < length) {
+    object = object[toKey(path[index++])];
+  }
+  return (index && index == length) ? object : undefined;
+}
+
+/**
+ * The base implementation of `_.isNative` without bad shim checks.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a native function,
+ *  else `false`.
+ */
+function baseIsNative(value) {
+  if (!isObject(value) || isMasked(value)) {
+    return false;
+  }
+  var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
+  return pattern.test(toSource(value));
+}
+
+/**
+ * The base implementation of `_.toString` which doesn't convert nullish
+ * values to empty strings.
+ *
+ * @private
+ * @param {*} value The value to process.
+ * @returns {string} Returns the string.
+ */
+function baseToString(value) {
+  // Exit early for strings to avoid a performance hit in some environments.
+  if (typeof value == 'string') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return symbolToString ? symbolToString.call(value) : '';
+  }
+  var result = (value + '');
+  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+}
+
+/**
+ * Casts `value` to a path array if it's not one.
+ *
+ * @private
+ * @param {*} value The value to inspect.
+ * @returns {Array} Returns the cast property path array.
+ */
+function castPath(value) {
+  return isArray(value) ? value : stringToPath(value);
+}
+
+/**
+ * Gets the data for `map`.
+ *
+ * @private
+ * @param {Object} map The map to query.
+ * @param {string} key The reference key.
+ * @returns {*} Returns the map data.
+ */
+function getMapData(map, key) {
+  var data = map.__data__;
+  return isKeyable(key)
+    ? data[typeof key == 'string' ? 'string' : 'hash']
+    : data.map;
+}
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = getValue(object, key);
+  return baseIsNative(value) ? value : undefined;
+}
+
+/**
+ * Checks if `value` is a property name and not a property path.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {Object} [object] The object to query keys on.
+ * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+ */
+function isKey(value, object) {
+  if (isArray(value)) {
+    return false;
+  }
+  var type = typeof value;
+  if (type == 'number' || type == 'symbol' || type == 'boolean' ||
+      value == null || isSymbol(value)) {
+    return true;
+  }
+  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
+    (object != null && value in Object(object));
+}
+
+/**
+ * Checks if `value` is suitable for use as unique object key.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
+ */
+function isKeyable(value) {
+  var type = typeof value;
+  return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
+    ? (value !== '__proto__')
+    : (value === null);
+}
+
+/**
+ * Checks if `func` has its source masked.
+ *
+ * @private
+ * @param {Function} func The function to check.
+ * @returns {boolean} Returns `true` if `func` is masked, else `false`.
+ */
+function isMasked(func) {
+  return !!maskSrcKey && (maskSrcKey in func);
+}
+
+/**
+ * Converts `string` to a property path array.
+ *
+ * @private
+ * @param {string} string The string to convert.
+ * @returns {Array} Returns the property path array.
+ */
+var stringToPath = memoize(function(string) {
+  string = toString(string);
+
+  var result = [];
+  if (reLeadingDot.test(string)) {
+    result.push('');
+  }
+  string.replace(rePropName, function(match, number, quote, string) {
+    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+  });
+  return result;
+});
+
+/**
+ * Converts `value` to a string key if it's not a string or symbol.
+ *
+ * @private
+ * @param {*} value The value to inspect.
+ * @returns {string|symbol} Returns the key.
+ */
+function toKey(value) {
+  if (typeof value == 'string' || isSymbol(value)) {
+    return value;
+  }
+  var result = (value + '');
+  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+}
+
+/**
+ * Converts `func` to its source code.
+ *
+ * @private
+ * @param {Function} func The function to process.
+ * @returns {string} Returns the source code.
+ */
+function toSource(func) {
+  if (func != null) {
+    try {
+      return funcToString.call(func);
+    } catch (e) {}
+    try {
+      return (func + '');
+    } catch (e) {}
+  }
+  return '';
+}
+
+/**
+ * Creates a function that memoizes the result of `func`. If `resolver` is
+ * provided, it determines the cache key for storing the result based on the
+ * arguments provided to the memoized function. By default, the first argument
+ * provided to the memoized function is used as the map cache key. The `func`
+ * is invoked with the `this` binding of the memoized function.
+ *
+ * **Note:** The cache is exposed as the `cache` property on the memoized
+ * function. Its creation may be customized by replacing the `_.memoize.Cache`
+ * constructor with one whose instances implement the
+ * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
+ * method interface of `delete`, `get`, `has`, and `set`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to have its output memoized.
+ * @param {Function} [resolver] The function to resolve the cache key.
+ * @returns {Function} Returns the new memoized function.
+ * @example
+ *
+ * var object = { 'a': 1, 'b': 2 };
+ * var other = { 'c': 3, 'd': 4 };
+ *
+ * var values = _.memoize(_.values);
+ * values(object);
+ * // => [1, 2]
+ *
+ * values(other);
+ * // => [3, 4]
+ *
+ * object.a = 2;
+ * values(object);
+ * // => [1, 2]
+ *
+ * // Modify the result cache.
+ * values.cache.set(object, ['a', 'b']);
+ * values(object);
+ * // => ['a', 'b']
+ *
+ * // Replace `_.memoize.Cache`.
+ * _.memoize.Cache = WeakMap;
+ */
+function memoize(func, resolver) {
+  if (typeof func != 'function' || (resolver && typeof resolver != 'function')) {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  var memoized = function() {
+    var args = arguments,
+        key = resolver ? resolver.apply(this, args) : args[0],
+        cache = memoized.cache;
+
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+    var result = func.apply(this, args);
+    memoized.cache = cache.set(key, result);
+    return result;
+  };
+  memoized.cache = new (memoize.Cache || MapCache);
+  return memoized;
+}
+
+// Assign cache to `_.memoize`.
+memoize.Cache = MapCache;
+
+/**
+ * Performs a
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ * var other = { 'a': 1 };
+ *
+ * _.eq(object, object);
+ * // => true
+ *
+ * _.eq(object, other);
+ * // => false
+ *
+ * _.eq('a', 'a');
+ * // => true
+ *
+ * _.eq('a', Object('a'));
+ * // => false
+ *
+ * _.eq(NaN, NaN);
+ * // => true
+ */
+function eq(value, other) {
+  return value === other || (value !== value && other !== other);
+}
+
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(document.body.children);
+ * // => false
+ *
+ * _.isArray('abc');
+ * // => false
+ *
+ * _.isArray(_.noop);
+ * // => false
+ */
+var isArray = Array.isArray;
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in Safari 8-9 which returns 'object' for typed array and other constructors.
+  var tag = isObject(value) ? objectToString.call(value) : '';
+  return tag == funcTag || tag == genTag;
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+}
+
+/**
+ * Converts `value` to a string. An empty string is returned for `null`
+ * and `undefined` values. The sign of `-0` is preserved.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {string} Returns the string.
+ * @example
+ *
+ * _.toString(null);
+ * // => ''
+ *
+ * _.toString(-0);
+ * // => '-0'
+ *
+ * _.toString([1, 2, 3]);
+ * // => '1,2,3'
+ */
+function toString(value) {
+  return value == null ? '' : baseToString(value);
+}
+
+/**
+ * Gets the value at `path` of `object`. If the resolved value is
+ * `undefined`, the `defaultValue` is returned in its place.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.7.0
+ * @category Object
+ * @param {Object} object The object to query.
+ * @param {Array|string} path The path of the property to get.
+ * @param {*} [defaultValue] The value returned for `undefined` resolved values.
+ * @returns {*} Returns the resolved value.
+ * @example
+ *
+ * var object = { 'a': [{ 'b': { 'c': 3 } }] };
+ *
+ * _.get(object, 'a[0].b.c');
+ * // => 3
+ *
+ * _.get(object, ['a', '0', 'b', 'c']);
+ * // => 3
+ *
+ * _.get(object, 'a.b.c', 'default');
+ * // => 'default'
+ */
+function get(object, path, defaultValue) {
+  var result = object == null ? undefined : baseGet(object, path);
+  return result === undefined ? defaultValue : result;
+}
+
+module.exports = get;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -33313,6 +34593,35 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+
+/***/ "./util/functions.js":
+/*!***************************!*\
+  !*** ./util/functions.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+
+  isEmpty: function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+    // return Object.keys(obj).length === 0;
+    // return Object.keys(obj).length;
+    // return obj;
+  },
+
+  capitalize: function capitalize(string) {
+    return string[0].toUpperCase() + string.slice(1);
+  }
+};
 
 /***/ })
 

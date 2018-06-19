@@ -46,13 +46,19 @@ class ItemDetail extends React.Component {
         <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>
       : this.props.detailValue
     const editIcons = this.state.inEditMode ?
-        <div className='icon-container save-cancel-icons'>
-          <i className="check-icon far fa-check-circle" onClick={this.submitDetailUpdate}></i>
-          <div className='edit-detail-cancel' onClick={this.toggleEditMode}>Cancel</div>
+        <div className='save-cancel-buttons'>
+          <button className='button--small' onClick={this.submitDetailUpdate}>
+            <i className="button-icon check-icon far fa-check-circle"></i>
+            <span>Save</span>
+          </button>
+          <button className='button--small' onClick={this.toggleEditMode}>Cancel</button>
         </div>
-      : <div className='icon-container' onClick={this.toggleEditMode}>
-          <i className='pencil-icon fas fa-pencil-alt'></i>
-        </div>;
+      : <div className='save-cancel-buttons'>
+          <button className='button--small' onClick={this.toggleEditMode}>
+            <i className='button-icon pencil-icon fas fa-pencil-alt'></i>
+            <span>Edit</span>
+          </button>
+        </div>
     const detailValueContainer = this.state.isDetailValueUpdating ?
         <div className='loader inline'/>
       : <div className='detail-value-container'>

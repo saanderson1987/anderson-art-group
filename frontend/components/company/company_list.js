@@ -3,11 +3,14 @@ import { withRouter } from 'react-router-dom';
 import List from '../list';
 import Company from '../../resources/company';
 import CompanyListItem from './company_list_item';
+import NewCompanyModal from './new_company_modal';
 
 const CompanyList = props => {
+  const resource = props.resource ? props.resource : Company;
   return (
-    <List resource={props.resource} {...props}>
-      <CompanyListItem resource={props.resource}/>
+    <List resource={resource} {...props}>
+      <CompanyListItem resource={resource}/>
+      <NewCompanyModal />
     </List>
   );
 };

@@ -1,16 +1,12 @@
 import Resource from './resource';
 import axios from 'axios';
 
-const ClientCompany = new Resource('companies', 'clients');
-
-ClientCompany.getByQuery = function (queryParams, subset='LAST_QUERY') {
-  if (queryParams && !queryParams.status) queryParams.status = 'client';
-  return this.send(
-    axios.get(this.baseRoute + '/clients', {
-      params: queryParams
-    }),
-    `${this.name.toUpperCase()}_GET_MANY`
-  );
+class ClientCompanyResource extends Resource {
+  getByQuery(queryParams, subset, route) {
+    if (!route) queryParams.status = 'client';
+    return super.getByQuery(queryParams, subset, route);
+  }
 }
 
+const ClientCompany = new ClientCompanyResource('companies', 'clients');
 export default ClientCompany;

@@ -8,7 +8,7 @@ class NewItemDetail extends React.Component {
   render() {
     const columnName = this.props.itemDetail.columnName;
     const detailName = this.props.itemDetail.detailName ?
-        this.props.detailName + ':'
+        this.props.itemDetail.detailName + ':'
       : columnName.charAt(0).toUpperCase() + columnName.slice(1) + ':';
 
     let input = <input type="text" value={this.props.detailValue} onChange={this.props.onValueChange(columnName)}/>;

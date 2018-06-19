@@ -33,6 +33,10 @@ ul {
   margin: 0;
 }
 
+button:focus {
+  outline:none;
+}
+
 .bold {
   font-weight: bold;
 }

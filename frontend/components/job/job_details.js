@@ -4,12 +4,14 @@ import ItemDetail from '../item_detail';
 import Job from '../../resources/job';
 import JobOrderList from '../job_order/job_order_list';
 
-const JobDetails = props => (
-  <ItemDetails resource={Job} {...props}>
-    <ItemDetail column='po_num' detailName='PO #'/>
-    <JobOrderList parentId={props.itemId}/>
-  </ItemDetails>
-);
+const JobDetails = props => {
+  return (
+    <ItemDetails resource={props.resource} {...props}>
+      <ItemDetail column='po_num' detailName='PO #'/>
+      <JobOrderList parentId={props.itemId}/>
+    </ItemDetails>
+  );
+};
 
 export default JobDetails;
 

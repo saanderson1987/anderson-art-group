@@ -24,6 +24,7 @@ class NewItemForm extends React.Component {
     this.props.itemDetails.forEach(itemDetail => {
       record[itemDetail.columnName] = this.state[itemDetail.columnName];
     })
+    if (this.props.parent) record[this.props.parent.column] = this.props.parent.id;
     this.props.create(record);
     this.props.toggle();
   }
@@ -56,8 +57,9 @@ class NewItemForm extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const {subset, route} = ownProps;
   return {
-    create: (record) => dispatch(ownProps.resource.create(record))
+    create: (record) => dispatch(ownProps.resource.create(record, subset, route))
   }
 }
 

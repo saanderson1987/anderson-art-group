@@ -9,10 +9,10 @@ class NewCompanyModal extends React.Component {
   }
 
   render() {
-
+    const resource = this.props.resource ? this.props.resource : Company;
     return (
       <Modal {...this.props}>
-        <NewItemForm {...this.props} resource={Company} itemTypeName='Company' itemDetails={[
+        <NewItemForm {...this.props} resource={resource} itemTypeName='Company' itemDetails={[
           {columnName: 'name'},
           {columnName: 'status', type: 'radio', values: [{valueName: 'prospect'}, {valueName: 'client'}]},
           {columnName: 'notes'}

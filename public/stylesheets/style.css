@@ -25,6 +25,10 @@ ul {
   margin: 0;
 }
 
+button:focus {
+  outline: none;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -62,6 +66,10 @@ button {
   color: white;
 }
 
+.button--small {
+  padding: 1px 7px 2px;
+}
+
 .button--new {
   color: green;
   margin: 10px;
@@ -72,16 +80,20 @@ button {
   margin-left: 5px;
 }
 
-.icon-container {
+.button--delete {
+  border-color: #d80202;
+  color: #d80202;
+}
+
+.button-icon {
+  margin-right: 5px;
+}
+
+.save-cancel-buttons {
   display: inline-block;
-  margin-left: 30px;
 }
 
-.icon-container * {
-  cursor: pointer;
-}
-
-.save-cancel-icons {
+.save-cancel-buttons > button {
   margin-left: 20px;
 }
 
@@ -91,7 +103,6 @@ button {
 
 .check-icon {
   color: green;
-  font-size: 1.4rem;
 }
 
 .edit-detail-cancel {
@@ -178,6 +189,14 @@ button {
   padding: 20px 50px 20px 20px;
 }
 
+.warning {
+  padding: 20px;
+}
+
+.warning-text {
+  margin-bottom: 20px;
+}
+
 .navbar {
   background-color: #4f78a9;
   color: #ffff;
@@ -215,6 +234,7 @@ button {
   padding: 10px 30px;
   border: 1px solid #e4e4e4;
   border-radius: 8px 8px 0px 0px;
+  cursor: default;
 }
 
 .spacer {
@@ -240,6 +260,11 @@ button {
   background-color: #ffff;
 }
 
+.root-list-new-button-container {
+  border-right: 1px solid #e4e4e4;
+  border-left: 1px solid #e4e4e4;
+}
+
 div.list-items--root > div.list-item--first {
   border-top: none;
 }
@@ -262,8 +287,15 @@ div.list-items--root > div.list-item--first {
   border-top: 1px solid #e4e4e4;
 }
 
+.list-item-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .list-item-label {
-  cursor: pointer;
+  cursor: default;
+  display: inline-block;
+  width: 100%;
 }
 
 .list-item-label * {

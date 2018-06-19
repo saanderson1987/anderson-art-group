@@ -17,6 +17,11 @@ class Resource {
       },
       [`${this.name.toUpperCase()}_GET_ONE`]: (oldState, newData) => {
         return merge({}, oldState, {[newData.id]: newData});
+      },
+      [`${this.name.toUpperCase()}_DELETE_ONE`]: (oldState, newData) => {
+        let newState = merge({}, oldState);
+        delete newState[newData.id];
+        return newState;
       }
     };
   }
@@ -29,49 +34,89 @@ class Resource {
 
   }
 
-  getByQuery(queryParams, subset='LAST_QUERY') {
-    // subset = subset.toUpperCase();
-    // this.setAction(subset);
+  getByQuery(queryParams, subset, route) {
+    const actionName = subset ?
+        this.createAction(subset, 'GET_MANY')
+      : `${this.name.toUpperCase()}_GET_MANY`;
+    route = route ? `/api/${route}` : this.baseRoute;
     return this.send(
-      axios.get(this.baseRoute, {
+      axios.get(route, {
         params: queryParams
       }),
-      `${this.name.toUpperCase()}_GET_MANY`
+      actionName
     );
   }
 
-  setAction(subset) {
-    this.actions[`${this.name.toUpperCase()}_${subset}_GET_MANY`] =
-      (oldState, newData) => {
-        return merge({}, oldState, {[subset.toLowerCase()]: newData});
-      }
+  createAction(subset, type) {
+    const actionName = `${this.name.toUpperCase()}_${subset[subset.length - 1].toUpperCase()}_${type}`;
+    const newObject = {};
+    switch (type) {
+      case 'GET_MANY':
+        // actionName = `${this.name.toUpperCase()}_${subset[subset.length - 1].toUpperCase()}_GET_MANY`
+        this.actions[actionName] = (oldState, newData) => {
+          // const newObj = {};
+          // let last = newObj;
+          // subset.forEach((pathName, idx) => {
+          //   if (idx === subset.length - 1) last[pathName] = newData;
+          //   else last[pathName] = {};
+          //   last = last[pathName];
+          // });
+          setValue(newObject, subset, newData);
+          return merge({}, oldState, newObject);
+        };
+        break;
+      case 'GET_ONE':
+        this.actions[actionName] = (oldState, newData) => {
+          subset.push(newData.id);
+          setValue(newObject, subset, newData)
+          return merge({}, oldState, newObject);
+        };
+        break;
+    }
+
+    function setValue(object, path, value) {
+      let last = object;
+      path.forEach((pathName, idx) => {
+        if (idx === path.length - 1) last[pathName] = value;
+        else last[pathName] = {};
+        last = last[pathName];
+      });
+    }
+
+    return actionName;
   }
 
-  getById(id) {
-    return this.send(
-      axios.get(`${this.baseRoute}/${id}`),
-      `${this.name.toUpperCase()}_GET_ONE`
-    );
+  getById(id, subset, route) {
+    const actionName = subset ?
+        this.createAction(subset, 'GET_ONE')
+      : `${this.name.toUpperCase()}_GET_ONE`;
+    route = route ? `/api/${route}/${id}` : `${this.baseRoute}/${id}`;
+    return this.send(axios.get(route), actionName);
   }
 
-  create(record) {
-    return this.send(
-      axios.post(this.baseRoute, record),
-      `${this.name.toUpperCase()}_GET_ONE`
-    );
+  create(record, subset, route) {
+    const actionName = subset ?
+        this.createAction(subset, 'GET_ONE')
+      : `${this.name.toUpperCase()}_GET_ONE`;
+    route = route ? `/api/${route}` : this.baseRoute;
+    return this.send(axios.post(route, record), actionName);
   }
 
-  update(record) {
-    return this.send(
-      axios.put(`${this.baseRoute}/${record.id}`, record),
-      `${this.name.toUpperCase()}_GET_ONE`
-    );
+  update(record, subset, route) {
+    const actionName = subset ?
+        this.createAction(subset, 'GET_ONE')
+      : `${this.name.toUpperCase()}_GET_ONE`;
+    route = route ? `/api/${route}/${record.id}` : `${this.baseRoute}/${record.id}`;
+    return this.send(axios.put(route, record), actionName);
   }
 
-  delete(id) {
+  delete(id, subset, route) {
+    const actionName = subset ?
+        this.createAction(subset, 'DELETE_ONE')
+      : `${this.name.toUpperCase()}_DELETE_ONE`;
     return this.send(
       axios.delete(`${this.baseRoute}/${id}`),
-      'DELETE_ONE'
+      `${this.name.toUpperCase()}_DELETE_ONE`
     );
   }
 
