@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import get from 'lodash.get';
-import ItemDetails from './item_details';
 import DeleteWarning from './ui/delete_warning';
 
 class ListItem extends React.Component {
@@ -33,10 +31,6 @@ class ListItem extends React.Component {
   }
 
   render() {
-    const {resource, subset, route, children, itemNameSource, item} = this.props;
-    const itemName = itemNameSource.path ?
-        get(this, itemNameSource.path)
-      : itemNameSource.string;
     const isFirst = this.props.isFirst ? 'list-item--first' : '';
     const isExpanded = this.state.expanded ? 'bold' : '';
     const caret = this.state.expanded ?
@@ -46,11 +40,7 @@ class ListItem extends React.Component {
         <button className='button--small' onClick={this.onClickDelete}>Delete</button>
       : null;
     const itemDetails = this.state.expanded ?
-        <ItemDetails itemId={item.id} resource={resource} subset={subset} route={route}>
-          {React.Children.map(children, (child) => {
-            return React.cloneElement(child);
-          })}
-        </ItemDetails>
+        this.props.children
       : null;
     const deleteWarning = this.state.isDeleteWarningVisible ?
         <DeleteWarning
@@ -65,7 +55,7 @@ class ListItem extends React.Component {
         <div className='list-item-header'>
           <div className={`list-item-label ${isExpanded}`} onClick={this.toggleExpansion}>
             {caret}
-            <span>{itemName}</span>
+            <span>{this.props.name}</span>
           </div>
           {deleteButton}
         </div>

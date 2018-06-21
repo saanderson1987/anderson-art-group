@@ -51,8 +51,8 @@ const mapStateToProps = (state, ownProps) => {
   const {subset, resource, itemId} = ownProps;
   const item = subset ?
       get(state[resource.name], [...subset, itemId], {})
-    : get(state[resource.name], [itemId], {});
-  return {item};
+    : state[resource.name][itemId];
+  if (ownProps.itemId) return {item};
   // if (ownProps.itemId) return {
   //   item: state[ownProps.resource.name][ownProps.itemId]
   // };

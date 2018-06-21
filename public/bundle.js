@@ -228,9 +228,17 @@ var _company = __webpack_require__(/*! ../../resources/company */ "./frontend/re
 
 var _company2 = _interopRequireDefault(_company);
 
-var _company_list_item = __webpack_require__(/*! ./company_list_item */ "./frontend/components/company/company_list_item.js");
+var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
 
-var _company_list_item2 = _interopRequireDefault(_company_list_item);
+var _list_item2 = _interopRequireDefault(_list_item);
+
+var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
+
+var _item_detail2 = _interopRequireDefault(_item_detail);
+
+var _job_list = __webpack_require__(/*! ../job/job_list */ "./frontend/components/job/job_list.js");
+
+var _job_list2 = _interopRequireDefault(_job_list);
 
 var _new_company_modal = __webpack_require__(/*! ./new_company_modal */ "./frontend/components/company/new_company_modal.js");
 
@@ -240,15 +248,30 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var CompanyList = function CompanyList(props) {
   var resource = props.resource ? props.resource : _company2.default;
+  var subset = props.subset,
+      route = props.route;
+
+
   return _react2.default.createElement(
     _list2.default,
     _extends({ resource: resource }, props),
-    _react2.default.createElement(_company_list_item2.default, { resource: resource }),
+    _react2.default.createElement(
+      _list_item2.default,
+      { itemNameSource: { path: 'props.item.name' } },
+      _react2.default.createElement(_item_detail2.default, { column: 'notes' })
+    ),
     _react2.default.createElement(_new_company_modal2.default, null)
   );
 };
 
 CompanyList.displayName = 'CompanyList';
+// <JobList
+// query={{company_id: props.itemId}}
+// parentId={props.itemId}
+// resource={resource}
+// subset={[props.itemId, 'jobs']}
+// route='jobs'
+// />
 exports.default = (0, _reactRouterDom.withRouter)(CompanyList);
 
 // class CompanyList extends React.Component {
@@ -809,8 +832,8 @@ var mapStateToProps = function mapStateToProps(state, ownProps) {
       resource = ownProps.resource,
       itemId = ownProps.itemId;
 
-  var item = subset ? (0, _lodash2.default)(state[resource.name], [].concat(_toConsumableArray(subset), [itemId]), {}) : state[resource.name][itemId];
-  if (ownProps.itemId) return { item: item };
+  var item = subset ? (0, _lodash2.default)(state[resource.name], [].concat(_toConsumableArray(subset), [itemId]), {}) : (0, _lodash2.default)(state[resource.name], [itemId], {});
+  return { item: item };
   // if (ownProps.itemId) return {
   //   item: state[ownProps.resource.name][ownProps.itemId]
   // };
@@ -1651,6 +1674,11 @@ var List = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
+      var _props = this.props,
+          resource = _props.resource,
+          subset = _props.subset,
+          route = _props.route;
+
       var listName = this.props.route ? (0, _functions.capitalize)(this.props.route) : (0, _functions.capitalize)(this.props.resource.name);
       // this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
       var listNameElement = this.props.root ? null : _react2.default.createElement(
@@ -1662,13 +1690,14 @@ var List = function (_React$Component) {
       var listItemElement = void 0;
       var newItemModalElement = void 0;
       _react2.default.Children.forEach(this.props.children, function (child) {
-        if (child.type.displayName.slice(-8) === 'ListItem') listItemElement = child;
-        if (child.type.displayName.slice(-5) === 'Modal') newItemModalElement = child;
+        var displayName = child.type.WrappedComponent ? child.type.WrappedComponent.displayName : child.type.displayName;
+        if (displayName.slice(-8) === 'ListItem') listItemElement = child;
+        if (displayName.slice(-5) === 'Modal') newItemModalElement = child;
       });
       var items = this.props.items;
       var itemList = items.map(function (item, idx) {
         var isFirst = idx === 0;
-        return _react2.default.cloneElement(listItemElement, { item: item, isFirst: isFirst, key: item.id });
+        return _react2.default.cloneElement(listItemElement, { resource: resource, subset: subset, route: route, item: item, isFirst: isFirst, key: item.id });
       });
       var newItemModal = this.state.isNewItemModalVisible ? _react2.default.cloneElement(newItemModalElement, {
         isVisible: this.state.isNewItemModalVisible,
@@ -1761,6 +1790,14 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
+var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _item_details = __webpack_require__(/*! ./item_details */ "./frontend/components/item_details.js");
+
+var _item_details2 = _interopRequireDefault(_item_details);
+
 var _delete_warning = __webpack_require__(/*! ./ui/delete_warning */ "./frontend/components/ui/delete_warning.js");
 
 var _delete_warning2 = _interopRequireDefault(_delete_warning);
@@ -1814,6 +1851,15 @@ var ListItem = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
+      var _props = this.props,
+          resource = _props.resource,
+          subset = _props.subset,
+          route = _props.route,
+          children = _props.children,
+          itemNameSource = _props.itemNameSource,
+          item = _props.item;
+
+      var itemName = itemNameSource.path ? (0, _lodash2.default)(this, itemNameSource.path) : itemNameSource.string;
       var isFirst = this.props.isFirst ? 'list-item--first' : '';
       var isExpanded = this.state.expanded ? 'bold' : '';
       var caret = this.state.expanded ? _react2.default.createElement('i', { className: 'fas fa-caret-down' }) : _react2.default.createElement('i', { className: 'fas fa-caret-right' });
@@ -1822,7 +1868,13 @@ var ListItem = function (_React$Component) {
         { className: 'button--small', onClick: this.onClickDelete },
         'Delete'
       ) : null;
-      var itemDetails = this.state.expanded ? this.props.children : null;
+      var itemDetails = this.state.expanded ? _react2.default.createElement(
+        _item_details2.default,
+        { itemId: item.id, resource: resource, subset: subset, route: route },
+        _react2.default.Children.map(children, function (child) {
+          return _react2.default.cloneElement(child);
+        })
+      ) : null;
       var deleteWarning = this.state.isDeleteWarningVisible ? _react2.default.createElement(_delete_warning2.default, {
         itemName: this.props.name,
         toggle: this.toggleDeleteWarning,
@@ -1844,7 +1896,7 @@ var ListItem = function (_React$Component) {
             _react2.default.createElement(
               'span',
               null,
-              this.props.name
+              itemName
             )
           ),
           deleteButton

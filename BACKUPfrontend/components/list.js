@@ -30,7 +30,6 @@ class List extends React.Component {
   }
 
   render() {
-    const {resource, subset, route} = this.props;
     const listName = this.props.route ?
         capitalize(this.props.route)
       : capitalize(this.props.resource.name);
@@ -40,19 +39,13 @@ class List extends React.Component {
     let listItemElement;
     let newItemModalElement;
     React.Children.forEach(this.props.children, (child) => {
-      const displayName = child.type.WrappedComponent ?
-          child.type.WrappedComponent.displayName
-        : child.type.displayName;
-      if (displayName.slice(-8) === 'ListItem') listItemElement = child;
-      if (displayName.slice(-5) === 'Modal') newItemModalElement = child;
+      if (child.type.displayName.slice(-8) === 'ListItem') listItemElement = child;
+      if (child.type.displayName.slice(-5) === 'Modal') newItemModalElement = child;
     });
     const items = this.props.items;
     const itemList = items.map( (item, idx) => {
       const isFirst = idx === 0;
-      return React.cloneElement(
-        listItemElement,
-        {resource, subset, route, item, isFirst, key: item.id}
-      );
+      return React.cloneElement(listItemElement, {item, isFirst, key: item.id});
     });
     const newItemModal = this.state.isNewItemModalVisible ?
         React.cloneElement(newItemModalElement, {

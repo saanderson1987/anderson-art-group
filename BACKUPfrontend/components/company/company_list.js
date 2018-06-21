@@ -2,32 +2,19 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import List from '../list';
 import Company from '../../resources/company';
-import ListItem from '../list_item';
-import ItemDetail from '../item_detail';
-import JobList from '../job/job_list';
+import CompanyListItem from './company_list_item';
 import NewCompanyModal from './new_company_modal';
 
 const CompanyList = props => {
   const resource = props.resource ? props.resource : Company;
-  const {subset, route} = props;
-
   return (
     <List resource={resource} {...props}>
-      <ListItem itemNameSource={{path: 'props.item.name'}}>
-        <ItemDetail column='notes'/>
-      </ListItem>
+      <CompanyListItem resource={resource}/>
       <NewCompanyModal />
     </List>
   );
 };
 
-// <JobList
-// query={{company_id: props.itemId}}
-// parentId={props.itemId}
-// resource={resource}
-// subset={[props.itemId, 'jobs']}
-// route='jobs'
-// />
 export default withRouter(CompanyList);
 
 // class CompanyList extends React.Component {
