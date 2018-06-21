@@ -52,15 +52,7 @@ class Resource {
     const newObject = {};
     switch (type) {
       case 'GET_MANY':
-        // actionName = `${this.name.toUpperCase()}_${subset[subset.length - 1].toUpperCase()}_GET_MANY`
         this.actions[actionName] = (oldState, newData) => {
-          // const newObj = {};
-          // let last = newObj;
-          // subset.forEach((pathName, idx) => {
-          //   if (idx === subset.length - 1) last[pathName] = newData;
-          //   else last[pathName] = {};
-          //   last = last[pathName];
-          // });
           setValue(newObject, subset, newData);
           return merge({}, oldState, newObject);
         };

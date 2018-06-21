@@ -150,54 +150,6 @@ exports.default = App;
 
 /***/ }),
 
-/***/ "./frontend/components/company/company_details.js":
-/*!********************************************************!*\
-  !*** ./frontend/components/company/company_details.js ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _item_details = __webpack_require__(/*! ../item_details */ "./frontend/components/item_details.js");
-
-var _item_details2 = _interopRequireDefault(_item_details);
-
-var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
-
-var _item_detail2 = _interopRequireDefault(_item_detail);
-
-var _job_list = __webpack_require__(/*! ../job/job_list */ "./frontend/components/job/job_list.js");
-
-var _job_list2 = _interopRequireDefault(_job_list);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var CompanyDetails = function CompanyDetails(props) {
-  return _react2.default.createElement(
-    _item_details2.default,
-    _extends({ resource: props.resource }, props),
-    _react2.default.createElement(_item_detail2.default, { column: 'notes' }),
-    _react2.default.createElement(_job_list2.default, { query: { company_id: props.itemId }, parentId: props.itemId, subset: [props.itemId, 'jobs'], route: 'jobs', resource: props.resource })
-  );
-};
-CompanyDetails.displayName = 'CompanyDetails';
-// query={{company_id: props.itemId}}
-exports.default = CompanyDetails;
-
-/***/ }),
-
 /***/ "./frontend/components/company/company_list.js":
 /*!*****************************************************!*\
   !*** ./frontend/components/company/company_list.js ***!
@@ -240,9 +192,9 @@ var _job_list = __webpack_require__(/*! ../job/job_list */ "./frontend/component
 
 var _job_list2 = _interopRequireDefault(_job_list);
 
-var _new_company_modal = __webpack_require__(/*! ./new_company_modal */ "./frontend/components/company/new_company_modal.js");
+var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
 
-var _new_company_modal2 = _interopRequireDefault(_new_company_modal);
+var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -258,20 +210,14 @@ var CompanyList = function CompanyList(props) {
     _react2.default.createElement(
       _list_item2.default,
       { itemNameSource: { path: 'props.item.name' } },
-      _react2.default.createElement(_item_detail2.default, { column: 'notes' })
+      _react2.default.createElement(_item_detail2.default, { column: 'notes' }),
+      _react2.default.createElement(_job_list2.default, { resource: resource, route: 'jobs' })
     ),
-    _react2.default.createElement(_new_company_modal2.default, null)
+    _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Company', itemDetails: [{ columnName: 'name' }, { columnName: 'status', type: 'radio', values: [{ valueName: 'prospect' }, { valueName: 'client' }] }, { columnName: 'notes' }] })
   );
 };
 
 CompanyList.displayName = 'CompanyList';
-// <JobList
-// query={{company_id: props.itemId}}
-// parentId={props.itemId}
-// resource={resource}
-// subset={[props.itemId, 'jobs']}
-// route='jobs'
-// />
 exports.default = (0, _reactRouterDom.withRouter)(CompanyList);
 
 // class CompanyList extends React.Component {
@@ -430,84 +376,6 @@ exports.default = CompanyListContainer;
 //   <div className='tab'><NavLink to={clientsPath}>Clients</NavLink></div>
 //   <div className='tab'><NavLink to={prospectsPatch}>Prospects</NavLink></div>
 // </div>
-
-/***/ }),
-
-/***/ "./frontend/components/company/company_list_item.js":
-/*!**********************************************************!*\
-  !*** ./frontend/components/company/company_list_item.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
-
-var _list_item2 = _interopRequireDefault(_list_item);
-
-var _company_details = __webpack_require__(/*! ./company_details */ "./frontend/components/company/company_details.js");
-
-var _company_details2 = _interopRequireDefault(_company_details);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var CompanyListItem = function CompanyListItem(props) {
-  return _react2.default.createElement(
-    _list_item2.default,
-    _extends({ name: props.item.name }, props),
-    _react2.default.createElement(_company_details2.default, { itemId: props.item.id, resource: props.resource })
-  );
-};
-
-CompanyListItem.displayName = 'CompanyListItem';
-exports.default = CompanyListItem;
-
-// class CompanyListItem extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.toggleExpansion = this.toggleExpansion.bind(this);
-//     this.state = {expanded: false};
-//   }
-//
-//   toggleExpansion(e) {
-//     const expanded = this.state.expanded ? false : true;
-//     this.setState({expanded});
-//   }
-//
-//   render() {
-//     const caret = this.state.expanded ?
-//         <i class="fas fa-caret-down"></i>
-//       : <i class="fas fa-caret-right"></i>;
-//     const details = this.state.expanded ?
-//         <CompanyDetails companyId={this.props.company.id}/>
-//       : null;
-//
-//     return (
-//       <div>
-//         <li onClick={this.toggleExpansion}>
-//           {caret}
-//           {this.props.company.name}
-//         </li>
-//         {details}
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// export default CompanyListItem;
 
 /***/ }),
 
@@ -804,10 +672,18 @@ var ItemDetails = function (_React$Component) {
 
       if (!this.props.item) return null;
       var children = _react2.default.Children.map(this.props.children, function (child) {
-        if (child.props.column) {
+        var displayName = child.type.displayName;
+
+        if (displayName.slice(-10) === 'ItemDetail') {
           child = _react2.default.cloneElement(child, {
             detailValue: _this2.props.item[child.props.column],
             updateDetail: _this2.updateDetail
+          });
+        } else if (displayName.slice(-4) === 'List') {
+          child = _react2.default.cloneElement(child, {
+            parentId: _this2.props.itemId,
+            query: { company_id: _this2.props.itemId },
+            subset: [_this2.props.itemId, child.props.route]
           });
         }
         return child;
@@ -858,100 +734,6 @@ exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapSt
 
 /***/ }),
 
-/***/ "./frontend/components/job/job_details.js":
-/*!************************************************!*\
-  !*** ./frontend/components/job/job_details.js ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _item_details = __webpack_require__(/*! ../item_details */ "./frontend/components/item_details.js");
-
-var _item_details2 = _interopRequireDefault(_item_details);
-
-var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
-
-var _item_detail2 = _interopRequireDefault(_item_detail);
-
-var _job = __webpack_require__(/*! ../../resources/job */ "./frontend/resources/job.js");
-
-var _job2 = _interopRequireDefault(_job);
-
-var _job_order_list = __webpack_require__(/*! ../job_order/job_order_list */ "./frontend/components/job_order/job_order_list.js");
-
-var _job_order_list2 = _interopRequireDefault(_job_order_list);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var JobDetails = function JobDetails(props) {
-  return _react2.default.createElement(
-    _item_details2.default,
-    _extends({ resource: props.resource }, props),
-    _react2.default.createElement(_item_detail2.default, { column: 'po_num', detailName: 'PO #' }),
-    _react2.default.createElement(_job_order_list2.default, { parentId: props.itemId })
-  );
-};
-
-JobDetails.displayName = 'JobDetails';
-exports.default = JobDetails;
-
-// class JobDetails extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.toggleExpansion = this.toggleExpansion.bind(this);
-//     this.state = {expanded: false};
-//   }
-//
-//   componentDidMount() {
-//     if (this.props.jobId) this.props.getJobById(this.props.jobId);
-//   }
-//
-//   toggleExpansion(e) {
-//     const expanded = this.state.expanded ? false : true;
-//     this.setState({expanded});
-//   }
-//
-//   render() {
-//     const job = this.props.job ? this.props.job : null;
-//     if (job) return (
-//       <div>
-//         <div>PO #: {job.po_num}</div>
-//         <JobOrderList jobId={this.props.jobId}/>
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = (state, ownProps) => {
-//   if (ownProps.jobId) return {
-//     job: state.jobs[ownProps.jobId]
-//   };
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getJobById: (id) => dispatch(Job.getById(id)),
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobDetails));
-
-/***/ }),
-
 /***/ "./frontend/components/job/job_list.js":
 /*!*********************************************!*\
   !*** ./frontend/components/job/job_list.js ***!
@@ -967,8 +749,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-// import makeList from '../list';
-
 
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
@@ -982,13 +762,17 @@ var _job = __webpack_require__(/*! ../../resources/job */ "./frontend/resources/
 
 var _job2 = _interopRequireDefault(_job);
 
-var _job_list_item = __webpack_require__(/*! ./job_list_item */ "./frontend/components/job/job_list_item.js");
+var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
 
-var _job_list_item2 = _interopRequireDefault(_job_list_item);
+var _list_item2 = _interopRequireDefault(_list_item);
 
-var _new_job_modal = __webpack_require__(/*! ./new_job_modal */ "./frontend/components/job/new_job_modal.js");
+var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
 
-var _new_job_modal2 = _interopRequireDefault(_new_job_modal);
+var _item_detail2 = _interopRequireDefault(_item_detail);
+
+var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
+
+var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -997,595 +781,18 @@ var JobList = function JobList(props) {
   return _react2.default.createElement(
     _list2.default,
     _extends({ resource: resource }, props),
-    _react2.default.createElement(_job_list_item2.default, { resource: resource, subset: props.subset, route: props.route }),
-    _react2.default.createElement(_new_job_modal2.default, { resource: resource, parentId: props.parentId, subset: props.subset, route: props.route })
+    _react2.default.createElement(
+      _list_item2.default,
+      { itemNameSource: { path: 'props.item.name' } },
+      _react2.default.createElement(_item_detail2.default, { column: 'po_num', detailName: 'PO #' })
+    ),
+    _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Job', parent: { id: props.parentId, column: 'company_id' },
+      itemDetails: [{ columnName: 'name' }, { columnName: 'po_num', detailName: 'PO #' }] })
   );
 };
 
 JobList.displayName = 'JobList';
 exports.default = JobList;
-
-// export default makeList(Job, JobListItem);
-
-// class JobList extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//
-//   render() {
-//     return (
-//       <List itemName='job' {...this.props}>
-//         <JobListItem/>
-//       </List>
-//     )
-//   }
-//
-// }
-//
-// const mapStateToProps = state => {
-//   return {
-//     items: Object.values(state.jobs)
-//   }
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getAll: () => dispatch(Job.all()),
-//     createNew: (job) => dispatch(Job.create(job))
-//
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobList));
-
-///
-
-
-// class JobList extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//
-//   componentDidMount() {
-//     this.props.getJobs();
-//   }
-//
-//   render() {
-//     const jobs = this.props.jobs;
-//     const createNewJob = this.props.createNewJob;
-//     const newJob = {
-//       name: 'TestJob5',
-//       po_num: '123ABC',
-//       company_id: 1
-//     };
-//
-//     return (
-//       <div>
-//         Jobs:
-//         <ul>
-//           {jobs.map(job =>
-//             <JobListItem job={job}/>
-//           )}
-//         </ul>
-//         <button onClick={function() {createNewJob(newJob);}}>Create new job</button>
-//
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = state => {
-//   return {
-//     jobs: Object.values(state.jobs)
-//   }
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getJobs: () => dispatch(Job.all()),
-//     createNewJob: (job) => dispatch(Job.create(job))
-//
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobList));
-
-/***/ }),
-
-/***/ "./frontend/components/job/job_list_item.js":
-/*!**************************************************!*\
-  !*** ./frontend/components/job/job_list_item.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
-
-var _list_item2 = _interopRequireDefault(_list_item);
-
-var _job_details = __webpack_require__(/*! ./job_details */ "./frontend/components/job/job_details.js");
-
-var _job_details2 = _interopRequireDefault(_job_details);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var JobListItem = function JobListItem(props) {
-  return _react2.default.createElement(
-    _list_item2.default,
-    _extends({ name: props.item.name }, props),
-    _react2.default.createElement(_job_details2.default, { itemId: props.item.id, resource: props.resource, subset: props.subset, route: props.route })
-  );
-};
-
-JobListItem.displayName = 'JobListItem';
-exports.default = JobListItem;
-
-// class JobListItem extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.toggleExpansion = this.toggleExpansion.bind(this);
-//     this.state = {expanded: false};
-//   }
-//
-//   toggleExpansion(e) {
-//     const expanded = this.state.expanded ? false : true;
-//     this.setState({expanded});
-//   }
-//
-//   render() {
-//     const caret = this.state.expanded ?
-//         <i class="fas fa-caret-down"></i>
-//       : <i class="fas fa-caret-right"></i>;
-//     const details = this.state.expanded ?
-//         <JobDetails jobId={this.props.job.id}/>
-//       : null;
-//
-//     console.log(this.props);
-//     return (
-//       <div>
-//         <li onClick={this.toggleExpansion}>
-//           {caret}
-//           {this.props.job.name}
-//         </li>
-//         {details}
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// export default JobListItem;
-
-/***/ }),
-
-/***/ "./frontend/components/job/new_job_modal.js":
-/*!**************************************************!*\
-  !*** ./frontend/components/job/new_job_modal.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _job = __webpack_require__(/*! ../../resources/job */ "./frontend/resources/job.js");
-
-var _job2 = _interopRequireDefault(_job);
-
-var _modal = __webpack_require__(/*! ../ui/modal */ "./frontend/components/ui/modal.js");
-
-var _modal2 = _interopRequireDefault(_modal);
-
-var _new_item_form = __webpack_require__(/*! ../new_item_form */ "./frontend/components/new_item_form.js");
-
-var _new_item_form2 = _interopRequireDefault(_new_item_form);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var NewJobModal = function (_React$Component) {
-  _inherits(NewJobModal, _React$Component);
-
-  function NewJobModal(props) {
-    _classCallCheck(this, NewJobModal);
-
-    return _possibleConstructorReturn(this, (NewJobModal.__proto__ || Object.getPrototypeOf(NewJobModal)).call(this, props));
-  }
-
-  _createClass(NewJobModal, [{
-    key: 'render',
-    value: function render() {
-      var resource = this.props.resource ? this.props.resource : _job2.default;
-      var _props = this.props,
-          parentId = _props.parentId,
-          subset = _props.subset,
-          route = _props.route;
-
-      return _react2.default.createElement(
-        _modal2.default,
-        this.props,
-        _react2.default.createElement(_new_item_form2.default, _extends({}, this.props, { parent: { id: parentId, column: 'company_id' },
-          resource: resource, subset: subset, route: route, itemTypeName: 'Job',
-          itemDetails: [{ columnName: 'name' }, { columnName: 'po_num', detailName: 'PO #' }] }))
-      );
-    }
-  }]);
-
-  return NewJobModal;
-}(_react2.default.Component);
-
-NewJobModal.displayName = 'NewJobModal';
-exports.default = NewJobModal;
-
-/***/ }),
-
-/***/ "./frontend/components/job_order/job_order_details.js":
-/*!************************************************************!*\
-  !*** ./frontend/components/job_order/job_order_details.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _item_details = __webpack_require__(/*! ../item_details */ "./frontend/components/item_details.js");
-
-var _item_details2 = _interopRequireDefault(_item_details);
-
-var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
-
-var _item_detail2 = _interopRequireDefault(_item_detail);
-
-var _job_order = __webpack_require__(/*! ../../resources/job_order */ "./frontend/resources/job_order.js");
-
-var _job_order2 = _interopRequireDefault(_job_order);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var JobOrderDetails = function JobOrderDetails(props) {
-  return _react2.default.createElement(
-    _item_details2.default,
-    _extends({ resource: _job_order2.default }, props),
-    _react2.default.createElement(_item_detail2.default, { column: 'notes' })
-  );
-};
-
-JobOrderDetails.displayName = 'JobOrderDetails';
-exports.default = JobOrderDetails;
-
-// class JobOrderDetails extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.toggleExpansion = this.toggleExpansion.bind(this);
-//     this.state = {expanded: false};
-//   }
-//
-//   componentDidMount() {
-//     if (this.props.jobOrderId) this.props.getJobOrderById(this.props.jobOrderId);
-//   }
-//
-//   toggleExpansion(e) {
-//     const expanded = this.state.expanded ? false : true;
-//     this.setState({expanded});
-//   }
-//
-//   render() {
-//     const jobOrder = this.props.jobOrder ? this.props.jobOrder : null;
-//     if (jobOrder) return (
-//       <div>
-//         <div>Notes: {jobOrder.notes}</div>
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = (state, ownProps) => {
-//   if (ownProps.jobOrderId) return {
-//     jobOrder: state.jobOrders[ownProps.jobOrderId]
-//   };
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getJobOrderById: (id) => dispatch(JobOrder.getById(id)),
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobOrderDetails));
-
-/***/ }),
-
-/***/ "./frontend/components/job_order/job_order_list.js":
-/*!*********************************************************!*\
-  !*** ./frontend/components/job_order/job_order_list.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _list = __webpack_require__(/*! ../list */ "./frontend/components/list.js");
-
-var _list2 = _interopRequireDefault(_list);
-
-var _job_order = __webpack_require__(/*! ../../resources/job_order */ "./frontend/resources/job_order.js");
-
-var _job_order2 = _interopRequireDefault(_job_order);
-
-var _job_order_list_item = __webpack_require__(/*! ./job_order_list_item */ "./frontend/components/job_order/job_order_list_item.js");
-
-var _job_order_list_item2 = _interopRequireDefault(_job_order_list_item);
-
-var _new_job_order_modal = __webpack_require__(/*! ./new_job_order_modal */ "./frontend/components/job_order/new_job_order_modal.js");
-
-var _new_job_order_modal2 = _interopRequireDefault(_new_job_order_modal);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var JobOrderList = function JobOrderList(props) {
-  return _react2.default.createElement(
-    _list2.default,
-    _extends({ resource: _job_order2.default, columns: 'created_at' }, props),
-    _react2.default.createElement(_job_order_list_item2.default, null),
-    _react2.default.createElement(_new_job_order_modal2.default, null)
-  );
-};
-
-JobOrderList.displayName = 'JobOrderList';
-exports.default = JobOrderList;
-
-// class JobOrderList extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//
-//   componentDidMount() {
-//     this.props.getJobOrders();
-//   }
-//
-//   render() {
-//     const jobOrders = this.props.jobOrders;
-//     const createNewJobOrder = this.props.createNewJobOrder;
-//     const newJobOrder = {
-//       job_id: 1,
-//       notes: 'new job order!'
-//     };
-//
-//     return (
-//       <div>
-//         JobOrders:
-//         <ul>
-//           {jobOrders.map(jobOrder =>
-//             <JobOrderListItem jobOrder={jobOrder}/>
-//           )}
-//         </ul>
-//         <button onClick={function() {createNewJobOrder(newJobOrder);}}>Create new job order</button>
-//
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = state => {
-//   return {
-//     jobOrders: Object.values(state.jobOrders)
-//   }
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getJobOrders: () => dispatch(JobOrder.all()),
-//     createNewJobOrder: (jobOrder) => dispatch(JobOrder.create(jobOrder))
-//
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobOrderList));
-
-/***/ }),
-
-/***/ "./frontend/components/job_order/job_order_list_item.js":
-/*!**************************************************************!*\
-  !*** ./frontend/components/job_order/job_order_list_item.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
-
-var _list_item2 = _interopRequireDefault(_list_item);
-
-var _job_order_details = __webpack_require__(/*! ./job_order_details */ "./frontend/components/job_order/job_order_details.js");
-
-var _job_order_details2 = _interopRequireDefault(_job_order_details);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var JobOrderListItem = function JobOrderListItem(props) {
-  var date = new Date(props.item.created_at).toDateString();
-  return _react2.default.createElement(
-    _list_item2.default,
-    _extends({ name: 'Job order created on ' + date }, props),
-    _react2.default.createElement(_job_order_details2.default, { itemId: props.item.id })
-  );
-};
-
-JobOrderListItem.displayName = 'JobOrderListItem';
-exports.default = JobOrderListItem;
-
-// class JobOrderListItem extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.toggleExpansion = this.toggleExpansion.bind(this);
-//     this.state = {expanded: false};
-//   }
-//
-//   toggleExpansion(e) {
-//     const expanded = this.state.expanded ? false : true;
-//     this.setState({expanded});
-//   }
-//
-//   render() {
-//     const caret = this.state.expanded ?
-//         <i class="fas fa-caret-down"></i>
-//       : <i class="fas fa-caret-right"></i>;
-//     const details = this.state.expanded ?
-//         <JobOrderDetails jobOrderId={this.props.jobOrder.id}/>
-//       : null;
-//
-//     return (
-//       <div>
-//         <li onClick={this.toggleExpansion}>
-//           {caret}
-//           Job Order created on [date]
-//         </li>
-//         {details}
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// export default JobOrderListItem;
-
-/***/ }),
-
-/***/ "./frontend/components/job_order/new_job_order_modal.js":
-/*!**************************************************************!*\
-  !*** ./frontend/components/job_order/new_job_order_modal.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _job_order = __webpack_require__(/*! ../../resources/job_order */ "./frontend/resources/job_order.js");
-
-var _job_order2 = _interopRequireDefault(_job_order);
-
-var _modal = __webpack_require__(/*! ../ui/modal */ "./frontend/components/ui/modal.js");
-
-var _modal2 = _interopRequireDefault(_modal);
-
-var _new_item_form = __webpack_require__(/*! ../new_item_form */ "./frontend/components/new_item_form.js");
-
-var _new_item_form2 = _interopRequireDefault(_new_item_form);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var NewJobOrderModal = function (_React$Component) {
-  _inherits(NewJobOrderModal, _React$Component);
-
-  function NewJobOrderModal(props) {
-    _classCallCheck(this, NewJobOrderModal);
-
-    return _possibleConstructorReturn(this, (NewJobOrderModal.__proto__ || Object.getPrototypeOf(NewJobOrderModal)).call(this, props));
-  }
-
-  _createClass(NewJobOrderModal, [{
-    key: 'render',
-    value: function render() {
-
-      return _react2.default.createElement(
-        _modal2.default,
-        this.props,
-        _react2.default.createElement(_new_item_form2.default, _extends({}, this.props, { resource: Company, itemTypeName: 'Company', itemDetails: [{ columnName: 'name' }, { columnName: 'notes' }] }))
-      );
-    }
-  }]);
-
-  return NewJobOrderModal;
-}(_react2.default.Component);
-
-NewJobOrderModal.displayName = 'NewJobOrderModal';
-exports.default = NewJobOrderModal;
 
 /***/ }),
 
@@ -1624,10 +831,6 @@ var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_module
 var _new_company_modal = __webpack_require__(/*! ./company/new_company_modal */ "./frontend/components/company/new_company_modal.js");
 
 var _new_company_modal2 = _interopRequireDefault(_new_company_modal);
-
-var _company_list_item = __webpack_require__(/*! ./company/company_list_item */ "./frontend/components/company/company_list_item.js");
-
-var _company_list_item2 = _interopRequireDefault(_company_list_item);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1701,7 +904,8 @@ var List = function (_React$Component) {
       });
       var newItemModal = this.state.isNewItemModalVisible ? _react2.default.cloneElement(newItemModalElement, {
         isVisible: this.state.isNewItemModalVisible,
-        toggle: this.toggleNewItemModal
+        toggle: this.toggleNewItemModal,
+        resource: resource, subset: subset, route: route
       }) : null;
 
       var isRoot = this.props.root ? 'list-items--root' : '';
@@ -2246,6 +1450,81 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 };
 
 exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(null, mapDispatchToProps)(NewItemForm));
+
+/***/ }),
+
+/***/ "./frontend/components/new_item_modal.js":
+/*!***********************************************!*\
+  !*** ./frontend/components/new_item_modal.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _modal = __webpack_require__(/*! ./ui/modal */ "./frontend/components/ui/modal.js");
+
+var _modal2 = _interopRequireDefault(_modal);
+
+var _new_item_form = __webpack_require__(/*! ./new_item_form */ "./frontend/components/new_item_form.js");
+
+var _new_item_form2 = _interopRequireDefault(_new_item_form);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NewItemModal = function (_React$Component) {
+  _inherits(NewItemModal, _React$Component);
+
+  function NewItemModal(props) {
+    _classCallCheck(this, NewItemModal);
+
+    return _possibleConstructorReturn(this, (NewItemModal.__proto__ || Object.getPrototypeOf(NewItemModal)).call(this, props));
+  }
+
+  _createClass(NewItemModal, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          parentId = _props.parentId,
+          resource = _props.resource,
+          subset = _props.subset,
+          route = _props.route,
+          itemTypeName = _props.itemTypeName,
+          itemDetails = _props.itemDetails;
+
+      return _react2.default.createElement(
+        _modal2.default,
+        this.props,
+        _react2.default.createElement(_new_item_form2.default, _extends({}, this.props, { resource: resource, subset: subset,
+          route: route, itemTypeName: itemTypeName, itemDetails: itemDetails }))
+      );
+    }
+  }]);
+
+  return NewItemModal;
+}(_react2.default.Component);
+
+NewItemModal.displayName = 'NewItemModal';
+exports.default = NewItemModal;
 
 /***/ }),
 
@@ -2947,15 +2226,7 @@ var Resource = function () {
       var newObject = {};
       switch (type) {
         case 'GET_MANY':
-          // actionName = `${this.name.toUpperCase()}_${subset[subset.length - 1].toUpperCase()}_GET_MANY`
           this.actions[actionName] = function (oldState, newData) {
-            // const newObj = {};
-            // let last = newObj;
-            // subset.forEach((pathName, idx) => {
-            //   if (idx === subset.length - 1) last[pathName] = newData;
-            //   else last[pathName] = {};
-            //   last = last[pathName];
-            // });
             setValue(newObject, subset, newData);
             return (0, _lodash2.default)({}, oldState, newObject);
           };

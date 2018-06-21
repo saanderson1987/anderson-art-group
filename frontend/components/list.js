@@ -4,7 +4,6 @@ import { capitalize } from '../../util/functions';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import NewCompanyModal from './company/new_company_modal';
-import CompanyListItem from './company/company_list_item';
 
 class List extends React.Component {
   constructor(props) {
@@ -57,7 +56,8 @@ class List extends React.Component {
     const newItemModal = this.state.isNewItemModalVisible ?
         React.cloneElement(newItemModalElement, {
           isVisible: this.state.isNewItemModalVisible,
-          toggle: this.toggleNewItemModal
+          toggle: this.toggleNewItemModal,
+          resource, subset, route,
         })
       : null;
 

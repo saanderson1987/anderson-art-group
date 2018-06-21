@@ -13,6 +13,7 @@ FRONT END
 -make List a HOC (its children should be arguments or elements of a hash map)
 -select date for new job order modal (import library);
 -create new company
+-create loading animation
 
 API
 +create /companies/clients, prospects api route for companies tabs.

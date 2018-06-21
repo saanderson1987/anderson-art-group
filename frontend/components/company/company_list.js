@@ -5,7 +5,7 @@ import Company from '../../resources/company';
 import ListItem from '../list_item';
 import ItemDetail from '../item_detail';
 import JobList from '../job/job_list';
-import NewCompanyModal from './new_company_modal';
+import NewItemModal from '../new_item_modal';
 
 const CompanyList = props => {
   const resource = props.resource ? props.resource : Company;
@@ -15,19 +15,17 @@ const CompanyList = props => {
     <List resource={resource} {...props}>
       <ListItem itemNameSource={{path: 'props.item.name'}}>
         <ItemDetail column='notes'/>
+        <JobList resource={resource} route='jobs'/>
       </ListItem>
-      <NewCompanyModal />
+      <NewItemModal itemTypeName='Company' itemDetails={[
+        {columnName: 'name'},
+        {columnName: 'status', type: 'radio', values: [{valueName: 'prospect'}, {valueName: 'client'}]},
+        {columnName: 'notes'}
+      ]}/>
     </List>
   );
 };
 
-// <JobList
-// query={{company_id: props.itemId}}
-// parentId={props.itemId}
-// resource={resource}
-// subset={[props.itemId, 'jobs']}
-// route='jobs'
-// />
 export default withRouter(CompanyList);
 
 // class CompanyList extends React.Component {

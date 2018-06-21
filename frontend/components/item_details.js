@@ -29,10 +29,17 @@ class ItemDetails extends React.Component {
   render() {
     if (!this.props.item) return null;
     const children = React.Children.map(this.props.children, child => {
-      if (child.props.column) {
+      const {displayName} = child.type;
+      if (displayName.slice(-10) === 'ItemDetail') {
         child = React.cloneElement(child, {
           detailValue: this.props.item[child.props.column],
           updateDetail: this.updateDetail
+        });
+      } else if (displayName.slice(-4) === 'List') {
+        child = React.cloneElement(child, {
+          parentId: this.props.itemId,
+          query: {company_id: this.props.itemId},
+          subset: [this.props.itemId, child.props.route]
         });
       }
       return child;
