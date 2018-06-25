@@ -1,63 +1,29 @@
 import React from 'react';
 import List from '../list';
 import JobOrder from '../../resources/job_order';
-import JobOrderListItem from './job_order_list_item';
-import NewJobOrderModal from './new_job_order_modal';
+import ListItem from '../list_item';
+import ItemDetail from '../item_detail';
+import NewItemModal from '../new_item_modal';
+import get from 'lodash.get';
 
-const JobOrderList = props => (
-  <List resource={JobOrder} columns={'created_at'} {...props}>
-    <JobOrderListItem/>
-    <NewJobOrderModal/>
-  </List>
-);
+const JobOrderList = props => {
+  const resource = props.resource ? props.resource : JobOrder;
+  const query = props.parentId ? {job_id: props.parentId} : {};
+  return (
+    <List query={query} resource={resource} columns={'created_at'} {...props}>
+      <ListItem itemNameSource={{func: function(newProps) {
+        const date = new Date(get(newProps, 'item.created_at')).toDateString();
+        return `Job order created on ${date}`;
+      }}}>
+        <ItemDetail column='notes'/>
+      </ListItem>
+      <NewItemModal itemTypeName='Job Order' parent={{id: props.parentId, column: 'job_id'}}
+        itemDetails={[
+          {columnName: 'date_ordered', detailName: 'Date Ordered'},
+          {columnName: 'notes'}
+      ]}/>
+    </List>
+  );
+};
 
 export default JobOrderList;
-
-// class JobOrderList extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//
-//   componentDidMount() {
-//     this.props.getJobOrders();
-//   }
-//
-//   render() {
-//     const jobOrders = this.props.jobOrders;
-//     const createNewJobOrder = this.props.createNewJobOrder;
-//     const newJobOrder = {
-//       job_id: 1,
-//       notes: 'new job order!'
-//     };
-//
-//     return (
-//       <div>
-//         JobOrders:
-//         <ul>
-//           {jobOrders.map(jobOrder =>
-//             <JobOrderListItem jobOrder={jobOrder}/>
-//           )}
-//         </ul>
-//         <button onClick={function() {createNewJobOrder(newJobOrder);}}>Create new job order</button>
-//
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = state => {
-//   return {
-//     jobOrders: Object.values(state.jobOrders)
-//   }
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getJobOrders: () => dispatch(JobOrder.all()),
-//     createNewJobOrder: (jobOrder) => dispatch(JobOrder.create(jobOrder))
-//
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobOrderList));

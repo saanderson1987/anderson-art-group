@@ -9,7 +9,7 @@ import NewItemModal from '../new_item_modal';
 
 const CompanyList = props => {
   const resource = props.resource ? props.resource : Company;
-  const {subset, route} = props;
+  const {route} = props;
 
   return (
     <List resource={resource} {...props}>
@@ -27,51 +27,3 @@ const CompanyList = props => {
 };
 
 export default withRouter(CompanyList);
-
-// class CompanyList extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//
-//   componentDidMount() {
-//     this.props.getAllCompanies();
-//   }
-//
-//   render() {
-//     const companies = this.props.companies;
-//     const getAllCompanies = this.props.getAllCompanies;
-//     const createNewCompany = this.props.createNewCompany;
-//     const newCompany = {
-//       status: 'client',
-//       notes: 'blah',
-//       name: 'TestCompany5'
-//     };
-//
-//     return (
-//       <div>
-//         <ul>
-//           {companies.map(company =>
-//             <CompanyListItem company={company}/>
-//           )}
-//         </ul>
-//         <button onClick={function() {createNewCompany(newCompany);}}>Create new company</button>
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = state => {
-//   return {
-//     companies: Object.values(state.companies)
-//   }
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getAllCompanies: () => dispatch(Company.all()),
-//     createNewCompany: (company) => dispatch(Company.create(company))
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CompanyList));

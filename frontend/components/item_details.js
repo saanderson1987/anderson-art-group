@@ -27,6 +27,7 @@ class ItemDetails extends React.Component {
   }
 
   render() {
+    let {subset} = this.props;
     if (!this.props.item) return null;
     const children = React.Children.map(this.props.children, child => {
       const {displayName} = child.type;
@@ -36,10 +37,12 @@ class ItemDetails extends React.Component {
           updateDetail: this.updateDetail
         });
       } else if (displayName.slice(-4) === 'List') {
+        subset = subset ? subset : [];
+        subset = [...subset, this.props.itemId, child.props.route];
         child = React.cloneElement(child, {
           parentId: this.props.itemId,
-          query: {company_id: this.props.itemId},
-          subset: [this.props.itemId, child.props.route]
+          // query: {company_id: this.props.itemId},
+          subset
         });
       }
       return child;

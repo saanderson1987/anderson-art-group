@@ -200,8 +200,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var CompanyList = function CompanyList(props) {
   var resource = props.resource ? props.resource : _company2.default;
-  var subset = props.subset,
-      route = props.route;
+  var route = props.route;
 
 
   return _react2.default.createElement(
@@ -219,54 +218,6 @@ var CompanyList = function CompanyList(props) {
 
 CompanyList.displayName = 'CompanyList';
 exports.default = (0, _reactRouterDom.withRouter)(CompanyList);
-
-// class CompanyList extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//
-//   componentDidMount() {
-//     this.props.getAllCompanies();
-//   }
-//
-//   render() {
-//     const companies = this.props.companies;
-//     const getAllCompanies = this.props.getAllCompanies;
-//     const createNewCompany = this.props.createNewCompany;
-//     const newCompany = {
-//       status: 'client',
-//       notes: 'blah',
-//       name: 'TestCompany5'
-//     };
-//
-//     return (
-//       <div>
-//         <ul>
-//           {companies.map(company =>
-//             <CompanyListItem company={company}/>
-//           )}
-//         </ul>
-//         <button onClick={function() {createNewCompany(newCompany);}}>Create new company</button>
-//       </div>
-//     );
-//   }
-//
-// }
-//
-// const mapStateToProps = state => {
-//   return {
-//     companies: Object.values(state.companies)
-//   }
-// }
-//
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     getAllCompanies: () => dispatch(Company.all()),
-//     createNewCompany: (company) => dispatch(Company.create(company))
-//   }
-// }
-//
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CompanyList));
 
 /***/ }),
 
@@ -670,6 +621,8 @@ var ItemDetails = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
+      var subset = this.props.subset;
+
       if (!this.props.item) return null;
       var children = _react2.default.Children.map(this.props.children, function (child) {
         var displayName = child.type.displayName;
@@ -680,10 +633,12 @@ var ItemDetails = function (_React$Component) {
             updateDetail: _this2.updateDetail
           });
         } else if (displayName.slice(-4) === 'List') {
+          subset = subset ? subset : [];
+          subset = [].concat(_toConsumableArray(subset), [_this2.props.itemId, child.props.route]);
           child = _react2.default.cloneElement(child, {
             parentId: _this2.props.itemId,
-            query: { company_id: _this2.props.itemId },
-            subset: [_this2.props.itemId, child.props.route]
+            // query: {company_id: this.props.itemId},
+            subset: subset
           });
         }
         return child;
@@ -770,6 +725,10 @@ var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/compone
 
 var _item_detail2 = _interopRequireDefault(_item_detail);
 
+var _job_order_list = __webpack_require__(/*! ../job_order/job_order_list */ "./frontend/components/job_order/job_order_list.js");
+
+var _job_order_list2 = _interopRequireDefault(_job_order_list);
+
 var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
 
 var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
@@ -778,13 +737,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var JobList = function JobList(props) {
   var resource = props.resource ? props.resource : _job2.default;
+  var query = props.parentId ? { company_id: props.parentId } : {};
   return _react2.default.createElement(
     _list2.default,
-    _extends({ resource: resource }, props),
+    _extends({ query: query, resource: resource }, props),
     _react2.default.createElement(
       _list_item2.default,
       { itemNameSource: { path: 'props.item.name' } },
-      _react2.default.createElement(_item_detail2.default, { column: 'po_num', detailName: 'PO #' })
+      _react2.default.createElement(_item_detail2.default, { column: 'po_num', detailName: 'PO #' }),
+      _react2.default.createElement(_job_order_list2.default, { resource: resource, route: 'job_orders' })
     ),
     _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Job', parent: { id: props.parentId, column: 'company_id' },
       itemDetails: [{ columnName: 'name' }, { columnName: 'po_num', detailName: 'PO #' }] })
@@ -793,6 +754,76 @@ var JobList = function JobList(props) {
 
 JobList.displayName = 'JobList';
 exports.default = JobList;
+
+/***/ }),
+
+/***/ "./frontend/components/job_order/job_order_list.js":
+/*!*********************************************************!*\
+  !*** ./frontend/components/job_order/job_order_list.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _list = __webpack_require__(/*! ../list */ "./frontend/components/list.js");
+
+var _list2 = _interopRequireDefault(_list);
+
+var _job_order = __webpack_require__(/*! ../../resources/job_order */ "./frontend/resources/job_order.js");
+
+var _job_order2 = _interopRequireDefault(_job_order);
+
+var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
+
+var _list_item2 = _interopRequireDefault(_list_item);
+
+var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
+
+var _item_detail2 = _interopRequireDefault(_item_detail);
+
+var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
+
+var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
+
+var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var JobOrderList = function JobOrderList(props) {
+  var resource = props.resource ? props.resource : _job_order2.default;
+  var query = props.parentId ? { job_id: props.parentId } : {};
+  return _react2.default.createElement(
+    _list2.default,
+    _extends({ query: query, resource: resource, columns: 'created_at' }, props),
+    _react2.default.createElement(
+      _list_item2.default,
+      { itemNameSource: { func: function func(newProps) {
+            var date = new Date((0, _lodash2.default)(newProps, 'item.created_at')).toDateString();
+            return 'Job order created on ' + date;
+          } } },
+      _react2.default.createElement(_item_detail2.default, { column: 'notes' })
+    ),
+    _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Job Order', parent: { id: props.parentId, column: 'job_id' },
+      itemDetails: [{ columnName: 'date_ordered', detailName: 'Date Ordered' }, { columnName: 'notes' }] })
+  );
+};
+
+JobOrderList.displayName = 'JobOrderList';
+exports.default = JobOrderList;
 
 /***/ }),
 
@@ -1063,7 +1094,7 @@ var ListItem = function (_React$Component) {
           itemNameSource = _props.itemNameSource,
           item = _props.item;
 
-      var itemName = itemNameSource.path ? (0, _lodash2.default)(this, itemNameSource.path) : itemNameSource.string;
+      var itemName = itemNameSource.path ? (0, _lodash2.default)(this, itemNameSource.path) : itemNameSource.func(this.props);
       var isFirst = this.props.isFirst ? 'list-item--first' : '';
       var isExpanded = this.state.expanded ? 'bold' : '';
       var caret = this.state.expanded ? _react2.default.createElement('i', { className: 'fas fa-caret-down' }) : _react2.default.createElement('i', { className: 'fas fa-caret-right' });
