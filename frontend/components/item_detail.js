@@ -1,27 +1,48 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
 
 class ItemDetail extends React.Component {
   constructor(props) {
     super(props);
     this.handleDetailValueChange = this.handleDetailValueChange.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
     this.toggleEditMode = this.toggleEditMode.bind(this);
     this.submitDetailUpdate = this.submitDetailUpdate.bind(this);
     this.state = {
       inEditMode: false,
       isDetailValueUpdating: false,
-      detailValue: props.detailValue
+      detailValue: this.getDetailValue()
     };
   }
 
   componentDidUpdate(prevProps) {
+    // if (this.props.detailValue !== prevProps.detailValue) {
+    //   this.setState({detailValue: this.props.detailValue});
+    //   this.setState({isDetailValueUpdating: false});
+    // }
     if (this.props.detailValue !== prevProps.detailValue) {
-      this.setState({detailValue: this.props.detailValue});
+      this.setState({detailValue: this.getDetailValue()});
       this.setState({isDetailValueUpdating: false});
     }
   }
 
+  getDetailValue() {
+    return this.props.type === 'date' ?
+        moment(this.props.detailValue)
+          // .clone()
+          // .locale(moment.locale())
+          // .format('L')
+      : this.props.detailValue;
+  }
+
   handleDetailValueChange(e) {
     this.setState({detailValue: e.target.value});
+  }
+
+  handleDateChange(date) {
+    this.setState({detailValue: date});
   }
 
   toggleEditMode() {
@@ -38,13 +59,28 @@ class ItemDetail extends React.Component {
   }
 
   render() {
+    const {type} = this.props;
     const column = this.props.column;
     const detailName = this.props.detailName ?
         this.props.detailName + ':'
       : column.charAt(0).toUpperCase() + column.slice(1) + ':';
-    const detailValue = this.state.inEditMode ?
-        <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>
-      : this.props.detailValue
+    let detailValue = this.props.detailValue;
+    let input = <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>;
+    switch (type) {
+      case 'date':
+        detailValue = moment(this.props.detailValue).clone().locale(moment.locale()).format('L');
+        input = <DatePicker
+            selected={this.state.detailValue}
+            onChange={this.handleDateChange}
+        />;
+    }
+
+    // const detailValue = this.state.inEditMode ?
+    //     <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>
+    //   : this.props.detailValue
+    const detailDisplay = this.state.inEditMode ?
+        input
+      : detailValue;
     const editIcons = this.state.inEditMode ?
         <div className='save-cancel-buttons'>
           <button className='button--small' onClick={this.submitDetailUpdate}>
@@ -62,7 +98,7 @@ class ItemDetail extends React.Component {
     const detailValueContainer = this.state.isDetailValueUpdating ?
         <div className='loader inline'/>
       : <div className='detail-value-container'>
-          <div className='item-detail-value'>{detailValue}</div>
+          <div className='item-detail-value'>{detailDisplay}</div>
           {editIcons}
         </div>;
 

@@ -30,10 +30,10 @@ class List extends React.Component {
 
   render() {
     const {resource, subset, route} = this.props;
-    const listName = this.props.route ?
-        capitalize(this.props.route)
-      : capitalize(this.props.resource.name);
-      // this.props.resource.name[0].toUpperCase() + this.props.resource.name.slice(1);
+    let {listName} = this.props;
+    listName = listName ? listName : route ?
+        capitalize(route)
+      : capitalize(resource.name);
     const listNameElement = this.props.root ? null :
         <div className='list-name'>{listName}:</div>;
     let listItemElement;
