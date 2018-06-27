@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports = {
 
   isEmpty: function (obj) {
@@ -13,5 +15,9 @@ module.exports = {
 
   capitalize: function(string) {
     return string[0].toUpperCase() + string.slice(1);
+  },
+
+  getDateString: function(date) {
+    return moment(date).clone().locale(moment.locale()).format('L');
   }
 }

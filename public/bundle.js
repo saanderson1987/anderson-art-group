@@ -846,6 +846,8 @@ var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/i
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _functions = __webpack_require__(/*! ../../../util/functions */ "./util/functions.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var JobOrderList = function JobOrderList(props) {
@@ -853,11 +855,13 @@ var JobOrderList = function JobOrderList(props) {
   var query = props.parentId ? { job_id: props.parentId } : {};
   return _react2.default.createElement(
     _list2.default,
-    _extends({ listName: 'Job Orders', query: query, resource: resource, columns: 'created_at' }, props),
+    _extends({ listName: 'Job Orders', query: query, resource: resource, columns: 'date_ordered' }, props),
     _react2.default.createElement(
       _list_item2.default,
-      { itemNameSource: { func: function func(newProps) {
-            var date = new Date((0, _lodash2.default)(newProps, 'item.date_ordered')).toDateString();
+      { itemNameSource: { getName: function getName(newProps) {
+            // const date = new Date(get(newProps, 'item.date_ordered')).toDateString();
+            var date = (0, _lodash2.default)(newProps, 'item.date_ordered');
+            date = (0, _functions.getDateString)(date);
             return 'Job order ordered on ' + date;
           } } },
       _react2.default.createElement(_item_detail2.default, { column: 'date_ordered', detailName: 'Date Ordered', type: 'date' }),
@@ -1139,8 +1143,9 @@ var ListItem = function (_React$Component) {
           children = _props.children,
           itemNameSource = _props.itemNameSource,
           item = _props.item;
+      // if (!itemNameSource.path) console.log(this.props.item);
 
-      var itemName = itemNameSource.path ? (0, _lodash2.default)(this, itemNameSource.path) : itemNameSource.func(this.props);
+      var itemName = itemNameSource.path ? (0, _lodash2.default)(this, itemNameSource.path) : itemNameSource.getName(this.props);
       var isFirst = this.props.isFirst ? 'list-item--first' : '';
       var isExpanded = this.state.expanded ? 'bold' : '';
       var caret = this.state.expanded ? _react2.default.createElement('i', { className: 'fas fa-caret-down' }) : _react2.default.createElement('i', { className: 'fas fa-caret-right' });
@@ -58377,6 +58382,8 @@ module.exports = function(module) {
 "use strict";
 
 
+var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+
 module.exports = {
 
   isEmpty: function isEmpty(obj) {
@@ -58391,6 +58398,10 @@ module.exports = {
 
   capitalize: function capitalize(string) {
     return string[0].toUpperCase() + string.slice(1);
+  },
+
+  getDateString: function getDateString(date) {
+    return moment(date).clone().locale(moment.locale()).format('L');
   }
 };
 

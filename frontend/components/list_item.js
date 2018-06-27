@@ -34,9 +34,10 @@ class ListItem extends React.Component {
 
   render() {
     const {resource, subset, route, children, itemNameSource, item} = this.props;
+    // if (!itemNameSource.path) console.log(this.props.item);
     const itemName = itemNameSource.path ?
         get(this, itemNameSource.path)
-      : itemNameSource.func(this.props);
+      : itemNameSource.getName(this.props);
     const isFirst = this.props.isFirst ? 'list-item--first' : '';
     const isExpanded = this.state.expanded ? 'bold' : '';
     const caret = this.state.expanded ?

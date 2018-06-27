@@ -5,14 +5,17 @@ import ListItem from '../list_item';
 import ItemDetail from '../item_detail';
 import NewItemModal from '../new_item_modal';
 import get from 'lodash.get';
+import {getDateString} from '../../../util/functions';
 
 const JobOrderList = props => {
   const resource = props.resource ? props.resource : JobOrder;
   const query = props.parentId ? {job_id: props.parentId} : {};
   return (
-    <List listName='Job Orders' query={query} resource={resource} columns={'created_at'} {...props}>
-      <ListItem itemNameSource={{func: function(newProps) {
-        const date = new Date(get(newProps, 'item.date_ordered')).toDateString();
+    <List listName='Job Orders' query={query} resource={resource} columns={'date_ordered'} {...props}>
+      <ListItem itemNameSource={{getName: function(newProps) {
+        // const date = new Date(get(newProps, 'item.date_ordered')).toDateString();
+        let date = get(newProps, 'item.date_ordered');
+        date = getDateString(date);
         return `Job order ordered on ${date}`;
       }}}>
         <ItemDetail column='date_ordered' detailName='Date Ordered' type='date'/>
