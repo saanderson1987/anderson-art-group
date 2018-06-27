@@ -474,11 +474,7 @@ var ItemDetail = function (_React$Component) {
   }, {
     key: 'getDetailValue',
     value: function getDetailValue() {
-      return this.props.type === 'date' ? (0, _moment2.default)(this.props.detailValue)
-      // .clone()
-      // .locale(moment.locale())
-      // .format('L')
-      : this.props.detailValue;
+      return this.props.type === 'date' ? (0, _moment2.default)(this.props.detailValue) : this.props.detailValue;
     }
   }, {
     key: 'handleDetailValueChange',
@@ -488,6 +484,7 @@ var ItemDetail = function (_React$Component) {
   }, {
     key: 'handleDateChange',
     value: function handleDateChange(date) {
+      console.log(date);
       this.setState({ detailValue: date });
     }
   }, {
@@ -522,10 +519,6 @@ var ItemDetail = function (_React$Component) {
             onChange: this.handleDateChange
           });
       }
-
-      // const detailValue = this.state.inEditMode ?
-      //     <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>
-      //   : this.props.detailValue
       var detailDisplay = this.state.inEditMode ? input : detailValue;
       var editIcons = this.state.inEditMode ? _react2.default.createElement(
         'div',
@@ -868,7 +861,7 @@ var JobOrderList = function JobOrderList(props) {
       _react2.default.createElement(_item_detail2.default, { column: 'notes' })
     ),
     _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Job Order', parent: { id: props.parentId, column: 'job_id' },
-      itemDetails: [{ columnName: 'date_ordered', detailName: 'Date Ordered' }, { columnName: 'notes' }] })
+      itemDetails: [{ columnName: 'date_ordered', detailName: 'Date Ordered', type: 'date' }, { columnName: 'notes' }] })
   );
 };
 
@@ -1317,6 +1310,16 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDatepicker = __webpack_require__(/*! react-datepicker */ "./node_modules/react-datepicker/es/index.js");
+
+var _reactDatepicker2 = _interopRequireDefault(_reactDatepicker);
+
+var _moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+
+var _moment2 = _interopRequireDefault(_moment);
+
+__webpack_require__(/*! react-datepicker/dist/react-datepicker.css */ "./node_modules/react-datepicker/dist/react-datepicker.css");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1331,18 +1334,30 @@ var NewItemDetail = function (_React$Component) {
   function NewItemDetail(props) {
     _classCallCheck(this, NewItemDetail);
 
-    return _possibleConstructorReturn(this, (NewItemDetail.__proto__ || Object.getPrototypeOf(NewItemDetail)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (NewItemDetail.__proto__ || Object.getPrototypeOf(NewItemDetail)).call(this, props));
+
+    _this.onDateChange = _this.onDateChange.bind(_this);
+    return _this;
   }
 
   _createClass(NewItemDetail, [{
+    key: 'onDateChange',
+    value: function onDateChange(date) {
+      this.props.onValueChange(this.props.itemDetail.columnName, date);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
 
+      var detailValue = this.props.detailValue;
+
       var columnName = this.props.itemDetail.columnName;
       var detailName = this.props.itemDetail.detailName ? this.props.itemDetail.detailName + ':' : columnName.charAt(0).toUpperCase() + columnName.slice(1) + ':';
 
-      var input = _react2.default.createElement('input', { type: 'text', value: this.props.detailValue, onChange: this.props.onValueChange(columnName) });
+      var input = _react2.default.createElement('input', { type: 'text', value: this.props.detailValue, onChange: function onChange(e) {
+          return _this2.props.onValueChange(columnName, e.target.value);
+        } });
       switch (this.props.itemDetail.type) {
         case 'radio':
           input = this.props.itemDetail.values.map(function (value) {
@@ -1365,6 +1380,13 @@ var NewItemDetail = function (_React$Component) {
             );
           });
           break;
+        case 'date':
+          detailValue = detailValue ? (0, _moment2.default)(detailValue) : (0, _moment2.default)();
+          input = _react2.default.createElement(_reactDatepicker2.default, {
+            selected: (0, _moment2.default)(detailValue),
+            onChange: this.onDateChange,
+            popperPlacement: 'bottom'
+          });
       }
 
       return _react2.default.createElement(
@@ -1375,7 +1397,11 @@ var NewItemDetail = function (_React$Component) {
           { className: 'item-detail-name' },
           detailName
         ),
-        input
+        _react2.default.createElement(
+          'div',
+          { className: 'item-detail-value' },
+          input
+        )
       );
     }
   }]);
@@ -1445,22 +1471,18 @@ var NewItemForm = function (_React$Component) {
 
   _createClass(NewItemForm, [{
     key: 'onItemDetailChange',
-    value: function onItemDetailChange(columnName) {
-      var _this2 = this;
-
-      return function (e) {
-        return _this2.setState(_defineProperty({}, columnName, e.target.value));
-      };
+    value: function onItemDetailChange(columnName, value) {
+      this.setState(_defineProperty({}, columnName, value));
     }
   }, {
     key: 'onClickSave',
     value: function onClickSave(event) {
-      var _this3 = this;
+      var _this2 = this;
 
       event.preventDefault();
       var record = {};
       this.props.itemDetails.forEach(function (itemDetail) {
-        record[itemDetail.columnName] = _this3.state[itemDetail.columnName];
+        record[itemDetail.columnName] = _this2.state[itemDetail.columnName];
       });
       if (this.props.parent) record[this.props.parent.column] = this.props.parent.id;
       this.props.create(record);
@@ -1469,13 +1491,13 @@ var NewItemForm = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this3 = this;
 
       var itemDetails = this.props.itemDetails.map(function (itemDetail) {
         return _react2.default.createElement(_new_item_detail2.default, {
           itemDetail: itemDetail,
-          detailValue: _this4.state[itemDetail.columnName],
-          onValueChange: _this4.onItemDetailChange,
+          detailValue: _this3.state[itemDetail.columnName],
+          onValueChange: _this3.onItemDetailChange,
           key: itemDetail.valueName
         });
       });
@@ -1499,7 +1521,7 @@ var NewItemForm = function (_React$Component) {
             _react2.default.createElement(
               'button',
               { onClick: function onClick(e) {
-                  return _this4.props.toggle({ isVisible: false });
+                  return _this3.props.toggle({ isVisible: false });
                 } },
               'Cancel'
             ),

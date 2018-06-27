@@ -14,6 +14,8 @@ FRONT END
 -select date for new job order modal (import library);
 -create new company
 -create loading animation
+-date picker popper hidden in modal if screen size vertical is too small. need scroll.
+-notes input needs to automatically get bigger. multiple notes??
 
 API
 +create /companies/clients, prospects api route for companies tabs.

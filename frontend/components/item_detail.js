@@ -31,9 +31,6 @@ class ItemDetail extends React.Component {
   getDetailValue() {
     return this.props.type === 'date' ?
         moment(this.props.detailValue)
-          // .clone()
-          // .locale(moment.locale())
-          // .format('L')
       : this.props.detailValue;
   }
 
@@ -42,6 +39,7 @@ class ItemDetail extends React.Component {
   }
 
   handleDateChange(date) {
+    console.log(date);
     this.setState({detailValue: date});
   }
 
@@ -74,10 +72,6 @@ class ItemDetail extends React.Component {
             onChange={this.handleDateChange}
         />;
     }
-
-    // const detailValue = this.state.inEditMode ?
-    //     <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>
-    //   : this.props.detailValue
     const detailDisplay = this.state.inEditMode ?
         input
       : detailValue;

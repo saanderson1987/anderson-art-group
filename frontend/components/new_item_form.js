@@ -14,8 +14,8 @@ class NewItemForm extends React.Component {
     });
   }
 
-  onItemDetailChange(columnName) {
-    return e => this.setState({[columnName] : e.target.value});
+  onItemDetailChange(columnName, value) {
+    this.setState({[columnName] : value});
   }
 
   onClickSave(event) {

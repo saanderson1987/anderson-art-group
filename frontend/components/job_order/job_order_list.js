@@ -23,7 +23,7 @@ const JobOrderList = props => {
       </ListItem>
       <NewItemModal itemTypeName='Job Order' parent={{id: props.parentId, column: 'job_id'}}
         itemDetails={[
-          {columnName: 'date_ordered', detailName: 'Date Ordered'},
+          {columnName: 'date_ordered', detailName: 'Date Ordered', type: 'date'},
           {columnName: 'notes'}
       ]}/>
     </List>
