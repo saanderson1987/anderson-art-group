@@ -74,11 +74,12 @@ class Model {
     return this.format(db.any(query));
   }
 
-  getById(id) {
+  getById(id, {joinClause='', joinTable}={}) {
     if (this.isInvalidId(id)) return this.error('id');
-    const query = pgp.as.format('SELECT * FROM ${table} WHERE id = ${id}', {
+    const query = pgp.as.format('SELECT * FROM ${table} as t1' + joinClause + ' WHERE t1.id = ${id}', {
       table: this.table,
-      id
+      id,
+      joinTable
     });
     console.log(query);
     return this.returnIfIdExists(db.one(query));
@@ -93,12 +94,14 @@ class Model {
   }
 
   update(record) {
+    if (this.isInvalidId(record.id)) return this.error('id');
+    if (Object.keys(record).length === 1) return this.getById(record.id);
     record['?id'] = record.id;
     delete record.id;
     const columns = Object.keys(record);
     const colSet = new pgp.helpers.ColumnSet(columns, {table: this.tableString});
     const query = pgp.helpers.update(record, colSet) + ' WHERE id = ' + record['?id'] + ' RETURNING *';
-    console.log(query);
+    console.log('hi', query, 'hi');
     return this.returnIfIdExists(db.one(query));
   }
 
