@@ -36,36 +36,40 @@ class Model {
       whereClause = ' WHERE ';
       columns.forEach((column, idx) => {
         if (idx > 0) whereClause += ' AND ';
-        whereClause += `${column} = \${${column}}`;
+        // whereClause += `${column} = \${${column}}`;
+        if (column === 'id') {
+          whereClause += `t1.${column} = \${${column}}`;
+        } else {
+          whereClause += `${column} = \${${column}}`;
+        }
       });
     }
     return whereClause;
   }
+
   getByQuery(queryParams) {
     let selectClause = 'SELECT *';
     if (queryParams.columns) {
       const selectColumns = queryParams.columns.split(',');
-      if (!selectColumns.includes('id')) selectColumns.push('id');
-      queryParams.columns = selectColumns;
-      selectClause = 'SELECT ${columns:name}';
+      if (!selectColumns.includes('id')) selectColumns.push('t1.id');
+      selectColumns.join(',');
+      // selectClause = 'SELECT ${columns:name}';
+      selectClause = `SELECT ${selectColumns}`;
     }
+
+    const joinClause = queryParams.joinClause || '';
 
     let columns = Object.assign({}, queryParams);
     delete columns.columns;
+    delete columns.joinClause;
+    delete columns.joinTable;
     columns = Object.keys(columns);
     const whereClause = this.createWhereClause(columns);
-    // let whereClause = '';
-    // if (columns.length > 0) {
-    //   whereClause = ' WHERE ';
-    //   columns.forEach((column, idx) => {
-    //     if (idx > 0) whereClause += ' AND ';
-    //     whereClause += `${column} = \${${column}}`;
-    //   });
-    // }
 
     queryParams.table = this.table;
 
-    const query = pgp.as.format(selectClause + ' FROM ${table}' + whereClause, queryParams);
+    // const query = pgp.as.format(selectClause + ' FROM ${table}' + whereClause, queryParams);
+    const query = pgp.as.format(selectClause + ' FROM ${table} as t1' + joinClause + whereClause, queryParams);
     console.log(query);
     return this.format(db.any(query));
   }

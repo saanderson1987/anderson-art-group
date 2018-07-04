@@ -103,6 +103,14 @@ var _company_list_container = __webpack_require__(/*! ./company/company_list_con
 
 var _company_list_container2 = _interopRequireDefault(_company_list_container);
 
+var _job_list = __webpack_require__(/*! ./job/job_list */ "./frontend/components/job/job_list.js");
+
+var _job_list2 = _interopRequireDefault(_job_list);
+
+var _job_order_list = __webpack_require__(/*! ./job_order/job_order_list */ "./frontend/components/job_order/job_order_list.js");
+
+var _job_order_list2 = _interopRequireDefault(_job_order_list);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var App = function App() {
@@ -137,6 +145,8 @@ var App = function App() {
       _reactRouterDom.Switch,
       null,
       _react2.default.createElement(_reactRouterDom.Route, { path: '/companies', component: _company_list_container2.default }),
+      _react2.default.createElement(_reactRouterDom.Route, { path: '/jobs', component: _job_list2.default, root: true }),
+      _react2.default.createElement(_reactRouterDom.Route, { path: '/orders', component: _job_order_list2.default, root: true }),
       _react2.default.createElement(_reactRouterDom.Redirect, { exact: true, from: '/', to: '/companies' }),
       _react2.default.createElement(_reactRouterDom.Route, { component: _not_found2.default })
     )
@@ -398,6 +408,76 @@ var NewCompanyModal = function (_React$Component) {
 
 NewCompanyModal.displayName = 'NewCompanyModal';
 exports.default = NewCompanyModal;
+
+/***/ }),
+
+/***/ "./frontend/components/installation/installation_list.js":
+/*!***************************************************************!*\
+  !*** ./frontend/components/installation/installation_list.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _list = __webpack_require__(/*! ../list */ "./frontend/components/list.js");
+
+var _list2 = _interopRequireDefault(_list);
+
+var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
+
+var _list_item2 = _interopRequireDefault(_list_item);
+
+var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
+
+var _item_detail2 = _interopRequireDefault(_item_detail);
+
+var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
+
+var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
+
+var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _functions = __webpack_require__(/*! ../../../util/functions */ "./util/functions.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var InstallationList = function InstallationList(props) {
+  var resource = props.resource;
+  var query = props.parentId ? { job_order_id: props.parentId } : {};
+  return _react2.default.createElement(
+    _list2.default,
+    _extends({ listName: 'Installations', query: query, resource: resource, columns: 'installation_date' }, props),
+    _react2.default.createElement(
+      _list_item2.default,
+      { itemNameSource: { getName: function getName(newProps) {
+            var date = (0, _lodash2.default)(newProps, 'item.installation_date');
+            date = (0, _functions.getDateString)(date);
+            return 'Installation set for ' + date;
+          } } },
+      _react2.default.createElement(_item_detail2.default, { column: 'installation_date', detailName: 'Install Date', type: 'date' }),
+      _react2.default.createElement(_item_detail2.default, { column: 'completed' })
+    ),
+    _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Installation', parent: { id: props.parentId, column: 'job_order_id' },
+      itemDetails: [{ columnName: 'installation_date', detailName: 'Install Date', type: 'date' }] })
+  );
+};
+
+InstallationList.displayName = 'InstallationList';
+exports.default = InstallationList;
 
 /***/ }),
 
@@ -815,6 +895,12 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _functions = __webpack_require__(/*! ../../../util/functions */ "./util/functions.js");
+
 var _list = __webpack_require__(/*! ../list */ "./frontend/components/list.js");
 
 var _list2 = _interopRequireDefault(_list);
@@ -831,15 +917,13 @@ var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/compone
 
 var _item_detail2 = _interopRequireDefault(_item_detail);
 
+var _installation_list = __webpack_require__(/*! ../installation/installation_list */ "./frontend/components/installation/installation_list.js");
+
+var _installation_list2 = _interopRequireDefault(_installation_list);
+
 var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
 
 var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
-
-var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _functions = __webpack_require__(/*! ../../../util/functions */ "./util/functions.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -858,7 +942,8 @@ var JobOrderList = function JobOrderList(props) {
             return 'Job order ordered on ' + date;
           } } },
       _react2.default.createElement(_item_detail2.default, { column: 'date_ordered', detailName: 'Date Ordered', type: 'date' }),
-      _react2.default.createElement(_item_detail2.default, { column: 'notes' })
+      _react2.default.createElement(_item_detail2.default, { column: 'notes' }),
+      _react2.default.createElement(_installation_list2.default, { resource: resource, route: 'installations' })
     ),
     _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Job Order', parent: { id: props.parentId, column: 'job_id' },
       itemDetails: [{ columnName: 'date_ordered', detailName: 'Date Ordered', type: 'date' }, { columnName: 'notes' }] })
