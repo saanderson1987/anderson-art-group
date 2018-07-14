@@ -304,6 +304,7 @@ div.list-items--root > div.list-item--first {
 
 .item-detail-name {
   display: inline-block;
+  vertical-align: top;
   width: 100px;
 }
 
