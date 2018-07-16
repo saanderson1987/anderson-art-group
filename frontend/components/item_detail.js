@@ -29,17 +29,17 @@ class ItemDetail extends React.Component {
   }
 
   getDetailValue() {
-    return this.props.type === 'date' ?
+    return this.props.type === 'date' && this.props.detailValue ?
         moment(this.props.detailValue)
       : this.props.detailValue;
   }
 
   handleDetailValueChange(e) {
-    this.setState({detailValue: e.target.value});
+    const detailValue = e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    this.setState({detailValue});
   }
 
   handleDateChange(date) {
-    console.log(date);
     this.setState({detailValue: date});
   }
 
@@ -62,15 +62,24 @@ class ItemDetail extends React.Component {
     const detailName = this.props.detailName ?
         this.props.detailName + ':'
       : column.charAt(0).toUpperCase() + column.slice(1) + ':';
-    let detailValue = this.props.detailValue;
+    let detailValue = type === 'checkbox' ?
+        <input type="checkbox" checked={this.state.detailValue} disabled/>
+      : this.props.detailValue;
+    console.log(this.props.detailValue);
     let input = <input type="text" value={this.state.detailValue} onChange={this.handleDetailValueChange}/>;
     switch (type) {
       case 'date':
-        detailValue = moment(this.props.detailValue).clone().locale(moment.locale()).format('L');
+        detailValue = this.props.detailValue ?
+            moment(this.props.detailValue).clone().locale(moment.locale()).format('L')
+          : null;
         input = <DatePicker
             selected={this.state.detailValue}
             onChange={this.handleDateChange}
         />;
+        break;
+      case 'checkbox':
+        input = <input type="checkbox" checked={this.state.detailValue} onChange={this.handleDetailValueChange}/>;
+        break;
     }
     const detailDisplay = this.state.inEditMode ?
         input

@@ -9,6 +9,7 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcryptjs');
+var helmet = require('helmet');
 
 var app = express();
 
@@ -18,6 +19,7 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(helmet());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -64,8 +66,10 @@ passport.deserializeUser(function(id, done) {
 // })
 
 // Post request handling route for login
-app.post('/login', passport.authenticate('local', { successRedirect: '/testGuard',
-        failureRedirect: '/testGuard'}));
+// app.post('/login', passport.authenticate('local', { successRedirect: '/testGuard',
+//         failureRedirect: '/testGuard'}));
+app.post('/login', passport.authenticate('local', { successRedirect: '/api/isAuthenticated',
+        failureRedirect: '/api/isAuthenticated'}));
 
 // Standerd middleware taking req, res and next as parameters
 function loggedIn(req, res, next) {
@@ -86,7 +90,8 @@ app.get('/testGuard',loggedIn, (req,res)=>{
 // Handle logout
 app.get('/logout',(req,res)=>{
     req.logout();
-    res.send("YOU ARE NOW LOGGED OUT")
+    // res.send("YOU ARE NOW LOGGED OUT")
+    res.send(req.isAuthenticated());
 })
 
 const setRoutes = require('./routes/set_routes');

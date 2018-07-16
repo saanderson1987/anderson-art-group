@@ -21,7 +21,7 @@ class CompanyListContainer extends React.Component {
         <Switch>
           <Route exact path='/companies/clients' render={props => <CompanyList resource={Client} root={true} {...props}/>} />
           <Route exact path='/companies/prospects' render={props => <CompanyList resource={Prospect} root={true} {...props}/>} />
-          <Redirect exact from="/companies" to="/companies/prospects"/>
+          <Redirect exact from="/companies" to="/companies/clients"/>
         </Switch>
       </div>
     );

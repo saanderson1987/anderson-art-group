@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import NewItemDetail from './new_item_detail';
 import moment from 'moment';
 
-class NewItemForm extends React.Component {
+class Form extends React.Component {
   constructor(props){
     super(props);
     this.onItemDetailChange = this.onItemDetailChange.bind(this);
@@ -26,6 +26,7 @@ class NewItemForm extends React.Component {
   }
 
   onClickSave(event) {
+    const {toggle} = this.props;
     event.preventDefault();
     const record = {};
     this.props.itemDetails.forEach(itemDetail => {
@@ -34,8 +35,8 @@ class NewItemForm extends React.Component {
       }
     })
     if (this.props.parent) record[this.props.parent.column] = this.props.parent.id;
-    this.props.create(record);
-    this.props.toggle();
+    this.props.submit(record);
+    if (toggle) toggle();
   }
 
   render() {
@@ -52,7 +53,7 @@ class NewItemForm extends React.Component {
 
     return (
       <div className='form'>
-        <div className='form-header'>Create New {this.props.itemTypeName}</div>
+        <div className='form-header'>{this.props.name}</div>
         <div className='form-body'>
           {itemDetails}
           <div className='button-row'>
@@ -66,10 +67,10 @@ class NewItemForm extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const {subset, route} = ownProps;
+  // const {subset, route} = ownProps;
   return {
-    create: (record) => dispatch(ownProps.resource.create(record, subset, route))
+    submit: (data) => dispatch(ownProps.submit(data))
   }
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(NewItemForm));
+export default withRouter(connect(null, mapDispatchToProps)(Form));

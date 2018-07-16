@@ -7,6 +7,7 @@ import ListItem from '../list_item';
 import ItemDetail from '../item_detail';
 import InstallationList from '../installation/installation_list';
 import NewItemModal from '../new_item_modal';
+import VendorOrderList from '../vendor_order/vendor_order_list';
 
 const JobOrderList = props => {
   const resource = props.resource ? props.resource : JobOrder;
@@ -14,7 +15,6 @@ const JobOrderList = props => {
   return (
     <List listName='Job Orders' query={query} resource={resource} columns={'date_ordered'} {...props}>
       <ListItem itemNameSource={{getName: function(newProps) {
-        // const date = new Date(get(newProps, 'item.date_ordered')).toDateString();
         let date = get(newProps, 'item.date_ordered');
         date = getDateString(date);
         return `Job order ordered on ${date}`;
@@ -22,6 +22,7 @@ const JobOrderList = props => {
         <ItemDetail column='date_ordered' detailName='Date Ordered' type='date'/>
         <ItemDetail column='notes'/>
         <InstallationList resource={resource} route='installations'/>
+        <VendorOrderList resource={resource} route='vendor_orders'/>
       </ListItem>
       <NewItemModal itemTypeName='Job Order' parent={{id: props.parentId, column: 'job_id'}}
         itemDetails={[

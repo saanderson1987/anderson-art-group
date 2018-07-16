@@ -34,7 +34,6 @@ class ListItem extends React.Component {
 
   render() {
     const {resource, subset, route, children, itemNameSource, item} = this.props;
-    // if (!itemNameSource.path) console.log(this.props.item);
     const itemName = itemNameSource.path ?
         get(this, itemNameSource.path)
       : itemNameSource.getName(this.props);
@@ -81,7 +80,8 @@ class ListItem extends React.Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {resource, subset, route} = ownProps;
   return {
-    delete: (id) => dispatch(resource.delete(id, subset, route))
+    delete: (id) => dispatch(resource.delete(id, subset, route)),
+    update: (record) => dispatch(resource.update(record, subset, route))
   }
 };
 

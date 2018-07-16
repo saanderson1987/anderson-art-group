@@ -9,6 +9,7 @@ FRONT END
 -button animation and maybe shadow
 -'create new' button should have item type name.
 -'create new' modal doesn't rerender list.
+-delete modal doesn't rerender.
 -required fields creating new record.
 -make List a HOC (its children should be arguments or elements of a hash map)
 -select date for new job order modal (import library);
@@ -16,6 +17,8 @@ FRONT END
 -create loading animation
 -date picker popper hidden in modal if screen size vertical is too small. need scroll.
 -notes input needs to automatically get bigger. multiple notes??
+-upon create new item and save, show new item expanded.
+
 
 API
 +create /companies/clients, prospects api route for companies tabs.

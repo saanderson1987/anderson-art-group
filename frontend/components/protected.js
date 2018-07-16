@@ -2,18 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import Session from '../resources/session';
+import Login from './login';
 
-const mapStateToProps = state => {
-  return {
-    authenticationState: state.session.isAuthenticated
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    isAuthenticated: () => dispatch(Session.isAuthenticated()),
-  }
-}
 
 class Protected extends React.Component {
   constructor(props) {
@@ -21,19 +11,30 @@ class Protected extends React.Component {
   }
 
   componentDidMount() {
-    this.props.isAuthenticated();
+    this.props.getAuthenticationState();
   }
 
   render() {
-    const isAuthenticated = this.props.authenticationState;
-    const children = this.props.children;
+    const {isAuthenticated, children} = this.props;
     return (
-      // isAuthenticated ?
+    //   isAuthenticated ?
         <div>{children}</div>
-      // : 'Please log in'
+      // : <Login />
     );
   }
 
+}
+
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.session.isAuthenticated
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getAuthenticationState: () => dispatch(Session.isAuthenticated()),
+  }
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Protected));

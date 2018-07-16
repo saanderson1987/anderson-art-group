@@ -117,30 +117,7 @@ var App = function App() {
   return _react2.default.createElement(
     'div',
     null,
-    _react2.default.createElement(
-      _nav_bar2.default,
-      null,
-      _react2.default.createElement(
-        _reactRouterDom.NavLink,
-        { to: '/companies' },
-        'Companies'
-      ),
-      _react2.default.createElement(
-        _reactRouterDom.NavLink,
-        { to: '/jobs' },
-        'Jobs'
-      ),
-      _react2.default.createElement(
-        _reactRouterDom.NavLink,
-        { to: '/orders' },
-        'Orders'
-      ),
-      _react2.default.createElement(
-        _reactRouterDom.NavLink,
-        { to: '/inventory' },
-        'Inventory'
-      )
-    ),
+    _react2.default.createElement(_nav_bar2.default, null),
     _react2.default.createElement(
       _reactRouterDom.Switch,
       null,
@@ -321,7 +298,7 @@ var CompanyListContainer = function (_React$Component) {
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/companies/prospects', render: function render(props) {
               return _react2.default.createElement(_company_list2.default, _extends({ resource: _prospect_company2.default, root: true }, props));
             } }),
-          _react2.default.createElement(_reactRouterDom.Redirect, { exact: true, from: '/companies', to: '/companies/prospects' })
+          _react2.default.createElement(_reactRouterDom.Redirect, { exact: true, from: '/companies', to: '/companies/clients' })
         )
       );
     }
@@ -411,6 +388,281 @@ exports.default = NewCompanyModal;
 
 /***/ }),
 
+/***/ "./frontend/components/company/new_vendor_modal.js":
+/*!*********************************************************!*\
+  !*** ./frontend/components/company/new_vendor_modal.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
+
+var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NewVendorModal = function NewVendorModal(props) {
+  var isVisible = props.isVisible,
+      toggle = props.toggle,
+      resource = props.resource,
+      subset = props.subset,
+      route = props.route;
+
+  return _react2.default.createElement(_new_item_modal2.default, {
+    itemTypeName: 'Vendor',
+    isVisible: isVisible,
+    toggle: toggle,
+    resource: resource,
+    subset: subset,
+    route: route,
+    itemDetails: [{ columnName: 'name' }, { columnName: 'notes' }] });
+};
+
+NewVendorModal.displayName = 'NewVendorModal';
+exports.default = NewVendorModal;
+
+/***/ }),
+
+/***/ "./frontend/components/form.js":
+/*!*************************************!*\
+  !*** ./frontend/components/form.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _new_item_detail = __webpack_require__(/*! ./new_item_detail */ "./frontend/components/new_item_detail.js");
+
+var _new_item_detail2 = _interopRequireDefault(_new_item_detail);
+
+var _moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+
+var _moment2 = _interopRequireDefault(_moment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Form = function (_React$Component) {
+  _inherits(Form, _React$Component);
+
+  function Form(props) {
+    _classCallCheck(this, Form);
+
+    var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, props));
+
+    _this.onItemDetailChange = _this.onItemDetailChange.bind(_this);
+    _this.onClickSave = _this.onClickSave.bind(_this);
+    _this.state = {};
+    props.itemDetails.forEach(function (itemDetail) {
+      if (itemDetail.type === 'checkbox') {
+        _this.state[itemDetail.columnName] = false;
+      } else if (itemDetail.type === 'date') {
+        _this.state[itemDetail.columnName] = (0, _moment2.default)();
+      } else {
+        _this.state[itemDetail.columnName] = '';
+      }
+    });
+    return _this;
+  }
+
+  _createClass(Form, [{
+    key: 'onItemDetailChange',
+    value: function onItemDetailChange(columnName, value) {
+      this.setState(_defineProperty({}, columnName, value));
+    }
+  }, {
+    key: 'onClickSave',
+    value: function onClickSave(event) {
+      var _this2 = this;
+
+      var toggle = this.props.toggle;
+
+      event.preventDefault();
+      var record = {};
+      this.props.itemDetails.forEach(function (itemDetail) {
+        if (_this2.state[itemDetail.columnName]) {
+          record[itemDetail.columnName] = _this2.state[itemDetail.columnName];
+        }
+      });
+      if (this.props.parent) record[this.props.parent.column] = this.props.parent.id;
+      this.props.submit(record);
+      if (toggle) toggle();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      var itemDetails = this.props.itemDetails.map(function (itemDetail) {
+        return _react2.default.createElement(_new_item_detail2.default, {
+          itemDetail: itemDetail,
+          detailValue: _this3.state[itemDetail.columnName],
+          onValueChange: _this3.onItemDetailChange,
+          key: itemDetail.valueName
+        });
+      });
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'form' },
+        _react2.default.createElement(
+          'div',
+          { className: 'form-header' },
+          this.props.name
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-body' },
+          itemDetails,
+          _react2.default.createElement(
+            'div',
+            { className: 'button-row' },
+            _react2.default.createElement(
+              'button',
+              { onClick: function onClick(e) {
+                  return _this3.props.toggle({ isVisible: false });
+                } },
+              'Cancel'
+            ),
+            _react2.default.createElement(
+              'button',
+              { className: 'button--save', onClick: this.onClickSave },
+              'Save'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Form;
+}(_react2.default.Component);
+
+Form.displayName = 'Form';
+
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  // const {subset, route} = ownProps;
+  return {
+    submit: function submit(data) {
+      return dispatch(ownProps.submit(data));
+    }
+  };
+};
+
+exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(null, mapDispatchToProps)(Form));
+
+/***/ }),
+
+/***/ "./frontend/components/form_modal.js":
+/*!*******************************************!*\
+  !*** ./frontend/components/form_modal.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _modal = __webpack_require__(/*! ./ui/modal */ "./frontend/components/ui/modal.js");
+
+var _modal2 = _interopRequireDefault(_modal);
+
+var _form = __webpack_require__(/*! ./form */ "./frontend/components/form.js");
+
+var _form2 = _interopRequireDefault(_form);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var FormModal = function (_React$Component) {
+  _inherits(FormModal, _React$Component);
+
+  function FormModal(props) {
+    _classCallCheck(this, FormModal);
+
+    return _possibleConstructorReturn(this, (FormModal.__proto__ || Object.getPrototypeOf(FormModal)).call(this, props));
+  }
+
+  _createClass(FormModal, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          parentId = _props.parentId,
+          resource = _props.resource,
+          subset = _props.subset,
+          route = _props.route,
+          name = _props.name,
+          itemDetails = _props.itemDetails;
+
+      return _react2.default.createElement(
+        _modal2.default,
+        this.props,
+        _react2.default.createElement(_form2.default, _extends({}, this.props, { resource: resource, subset: subset,
+          route: route, name: name, itemDetails: itemDetails }))
+      );
+    }
+  }]);
+
+  return FormModal;
+}(_react2.default.Component);
+
+FormModal.displayName = 'FormModal';
+exports.default = FormModal;
+
+/***/ }),
+
 /***/ "./frontend/components/installation/installation_list.js":
 /*!***************************************************************!*\
   !*** ./frontend/components/installation/installation_list.js ***!
@@ -435,6 +687,10 @@ var _list = __webpack_require__(/*! ../list */ "./frontend/components/list.js");
 
 var _list2 = _interopRequireDefault(_list);
 
+var _installation = __webpack_require__(/*! ../../resources/installation */ "./frontend/resources/installation.js");
+
+var _installation2 = _interopRequireDefault(_installation);
+
 var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
 
 var _list_item2 = _interopRequireDefault(_list_item);
@@ -456,7 +712,7 @@ var _functions = __webpack_require__(/*! ../../../util/functions */ "./util/func
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var InstallationList = function InstallationList(props) {
-  var resource = props.resource;
+  var resource = props.resource ? props.resource : _installation2.default;
   var query = props.parentId ? { job_order_id: props.parentId } : {};
   return _react2.default.createElement(
     _list2.default,
@@ -469,10 +725,10 @@ var InstallationList = function InstallationList(props) {
             return 'Installation set for ' + date;
           } } },
       _react2.default.createElement(_item_detail2.default, { column: 'installation_date', detailName: 'Install Date', type: 'date' }),
-      _react2.default.createElement(_item_detail2.default, { column: 'completed' })
+      _react2.default.createElement(_item_detail2.default, { column: 'completed', type: 'checkbox' })
     ),
     _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Installation', parent: { id: props.parentId, column: 'job_order_id' },
-      itemDetails: [{ columnName: 'installation_date', detailName: 'Install Date', type: 'date' }] })
+      itemDetails: [{ columnName: 'installation_date', detailName: 'Install Date', type: 'date' }, { columnName: 'completed', type: 'checkbox' }] })
   );
 };
 
@@ -554,17 +810,17 @@ var ItemDetail = function (_React$Component) {
   }, {
     key: 'getDetailValue',
     value: function getDetailValue() {
-      return this.props.type === 'date' ? (0, _moment2.default)(this.props.detailValue) : this.props.detailValue;
+      return this.props.type === 'date' && this.props.detailValue ? (0, _moment2.default)(this.props.detailValue) : this.props.detailValue;
     }
   }, {
     key: 'handleDetailValueChange',
     value: function handleDetailValueChange(e) {
-      this.setState({ detailValue: e.target.value });
+      var detailValue = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+      this.setState({ detailValue: detailValue });
     }
   }, {
     key: 'handleDateChange',
     value: function handleDateChange(date) {
-      console.log(date);
       this.setState({ detailValue: date });
     }
   }, {
@@ -589,15 +845,20 @@ var ItemDetail = function (_React$Component) {
 
       var column = this.props.column;
       var detailName = this.props.detailName ? this.props.detailName + ':' : column.charAt(0).toUpperCase() + column.slice(1) + ':';
-      var detailValue = this.props.detailValue;
+      var detailValue = type === 'checkbox' ? _react2.default.createElement('input', { type: 'checkbox', checked: this.state.detailValue, disabled: true }) : this.props.detailValue;
+      console.log(this.props.detailValue);
       var input = _react2.default.createElement('input', { type: 'text', value: this.state.detailValue, onChange: this.handleDetailValueChange });
       switch (type) {
         case 'date':
-          detailValue = (0, _moment2.default)(this.props.detailValue).clone().locale(_moment2.default.locale()).format('L');
+          detailValue = this.props.detailValue ? (0, _moment2.default)(this.props.detailValue).clone().locale(_moment2.default.locale()).format('L') : null;
           input = _react2.default.createElement(_reactDatepicker2.default, {
             selected: this.state.detailValue,
             onChange: this.handleDateChange
           });
+          break;
+        case 'checkbox':
+          input = _react2.default.createElement('input', { type: 'checkbox', checked: this.state.detailValue, onChange: this.handleDetailValueChange });
+          break;
       }
       var detailDisplay = this.state.inEditMode ? input : detailValue;
       var editIcons = this.state.inEditMode ? _react2.default.createElement(
@@ -696,6 +957,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -730,8 +993,9 @@ var ItemDetails = function (_React$Component) {
   }, {
     key: 'updateDetail',
     value: function updateDetail(column, value) {
-      var record = this.props.item;
-      record[column] = value;
+      var record = _defineProperty({
+        id: this.props.item.id
+      }, column, value);
       this.props.update(record);
     }
   }, {
@@ -751,12 +1015,12 @@ var ItemDetails = function (_React$Component) {
             updateDetail: _this2.updateDetail
           });
         } else if (displayName.slice(-4) === 'List') {
-          subset = subset ? subset : [];
-          subset = [].concat(_toConsumableArray(subset), [_this2.props.itemId, child.props.route]);
+          var newSubset = subset ? subset : [];
+          newSubset = [].concat(_toConsumableArray(newSubset), [_this2.props.itemId, child.props.route]);
           child = _react2.default.cloneElement(child, {
             parentId: _this2.props.itemId,
             // query: {company_id: this.props.itemId},
-            subset: subset
+            subset: newSubset
           });
         }
         return child;
@@ -925,6 +1189,10 @@ var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/c
 
 var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
 
+var _vendor_order_list = __webpack_require__(/*! ../vendor_order/vendor_order_list */ "./frontend/components/vendor_order/vendor_order_list.js");
+
+var _vendor_order_list2 = _interopRequireDefault(_vendor_order_list);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var JobOrderList = function JobOrderList(props) {
@@ -936,14 +1204,14 @@ var JobOrderList = function JobOrderList(props) {
     _react2.default.createElement(
       _list_item2.default,
       { itemNameSource: { getName: function getName(newProps) {
-            // const date = new Date(get(newProps, 'item.date_ordered')).toDateString();
             var date = (0, _lodash2.default)(newProps, 'item.date_ordered');
             date = (0, _functions.getDateString)(date);
             return 'Job order ordered on ' + date;
           } } },
       _react2.default.createElement(_item_detail2.default, { column: 'date_ordered', detailName: 'Date Ordered', type: 'date' }),
       _react2.default.createElement(_item_detail2.default, { column: 'notes' }),
-      _react2.default.createElement(_installation_list2.default, { resource: resource, route: 'installations' })
+      _react2.default.createElement(_installation_list2.default, { resource: resource, route: 'installations' }),
+      _react2.default.createElement(_vendor_order_list2.default, { resource: resource, route: 'vendor_orders' })
     ),
     _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Job Order', parent: { id: props.parentId, column: 'job_id' },
       itemDetails: [{ columnName: 'date_ordered', detailName: 'Date Ordered', type: 'date' }, { columnName: 'notes' }] })
@@ -1221,7 +1489,6 @@ var ListItem = function (_React$Component) {
           children = _props.children,
           itemNameSource = _props.itemNameSource,
           item = _props.item;
-      // if (!itemNameSource.path) console.log(this.props.item);
 
       var itemName = itemNameSource.path ? (0, _lodash2.default)(this, itemNameSource.path) : itemNameSource.getName(this.props);
       var isFirst = this.props.isFirst ? 'list-item--first' : '';
@@ -1285,11 +1552,75 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
   return {
     delete: function _delete(id) {
       return dispatch(resource.delete(id, subset, route));
+    },
+    update: function update(record) {
+      return dispatch(resource.update(record, subset, route));
     }
   };
 };
 
 exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(null, mapDispatchToProps)(ListItem));
+
+/***/ }),
+
+/***/ "./frontend/components/login.js":
+/*!**************************************!*\
+  !*** ./frontend/components/login.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _form_modal = __webpack_require__(/*! ./form_modal */ "./frontend/components/form_modal.js");
+
+var _form_modal2 = _interopRequireDefault(_form_modal);
+
+var _session = __webpack_require__(/*! ../resources/session */ "./frontend/resources/session.js");
+
+var _session2 = _interopRequireDefault(_session);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Login = function (_React$Component) {
+  _inherits(Login, _React$Component);
+
+  function Login(props) {
+    _classCallCheck(this, Login);
+
+    return _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+  }
+
+  _createClass(Login, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(_form_modal2.default, { name: 'Login', submit: _session2.default.login,
+        itemDetails: [{ columnName: 'username' }, { columnName: 'password' }] });
+    }
+  }]);
+
+  return Login;
+}(_react2.default.Component);
+
+Login.displayName = 'Login';
+exports.default = Login;
 
 /***/ }),
 
@@ -1307,71 +1638,136 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _session = __webpack_require__(/*! ../resources/session */ "./frontend/resources/session.js");
+
+var _session2 = _interopRequireDefault(_session);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var NavBar = function NavBar(props) {
-  var key = Math.random();
-  return _react2.default.createElement(
-    'nav',
-    { id: 'navbar', className: 'navbar navbar-expand-md' },
-    _react2.default.createElement('img', { className: 'navbar-logo', src: '/images/taag_logo_circle.png' }),
-    _react2.default.createElement(
-      'div',
-      { className: 'navbar-toggler-', 'data-toggle': 'collapse', 'data-target': '#nav-bar-links' + key, 'aria-controls': 'nav-bar-links' + key, 'aria-expanded': 'false', 'aria-label': 'Toggle navigation' },
-      _react2.default.createElement('i', { className: 'fas fa-bars', style: { color: '#ffff', fontSize: '2rem' } })
-    ),
-    _react2.default.createElement(
-      'div',
-      { className: 'collapse navbar-collapse', id: 'nav-bar-links' + key },
-      _react2.default.createElement(
-        'ul',
-        { className: 'navbar-nav mr-auto' },
-        _react2.default.Children.map(props.children, function (child) {
-          return _react2.default.createElement(
-            'li',
-            { className: 'nav-item' },
-            _react2.default.createElement(
-              'span',
-              { className: 'nav-link' },
-              child
-            )
-          );
-        })
-      )
-    )
-  );
-};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-NavBar.displayName = 'NavBar';
-exports.default = NavBar;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-// <div className="navbar-toggler" type="button" data-toggle="collapse" data-target={`#nav-bar-links${key}`} aria-controls={`nav-bar-links${key}`} aria-expanded="false" aria-label="Toggle navigation">
-// <span className="navbar-toggler-icon"></span>
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 // const NavBar = (props) => {
-//   const links = [];
-//   if (props.links) {
-//     props.links.forEach((link) => {
-//       if (typeof link === 'string') {
-//         links.push({
-//           name: link,
-//           href: `/${link.toLowerCase()}`
-//         })
-//       } else links.push(link);
-//     });
-//   }
+//   const key = Math.random();
 //   return (
-//     <div>
-//       {links.map((link) => {
-//         return <NavLink to={link.href}>{link.name}</NavLink>
-//       })}
-//     </div>
+//     <nav id='navbar' className="navbar navbar-expand-md">
+//       <img className='navbar-logo' src='/images/taag_logo_circle.png'/>
+//       <div className="navbar-toggler-" data-toggle="collapse" data-target={`#nav-bar-links${key}`} aria-controls={`nav-bar-links${key}`} aria-expanded="false" aria-label="Toggle navigation">
+//         <i className="fas fa-bars" style={{color: '#ffff', fontSize: '2rem'}}></i>
+//       </div>
+//       <div className="collapse navbar-collapse" id={`nav-bar-links${key}`}>
+//         <ul className="navbar-nav mr-auto">
+//           {React.Children.map(props.children, (child) => {
+//             return (
+//               <li className="nav-item">
+//                 <span className="nav-link">{child}</span>
+//               </li>
+//             )
+//           })}
+//         </ul>
+//       </div>
+//     </nav>
 //   );
 // }
+
+var NavBar = function (_React$Component) {
+  _inherits(NavBar, _React$Component);
+
+  function NavBar(props) {
+    _classCallCheck(this, NavBar);
+
+    return _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).call(this, props));
+  }
+
+  _createClass(NavBar, [{
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var links = [_react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: '/companies' },
+        'Companies'
+      ), _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: '/jobs' },
+        'Jobs'
+      ), _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: '/orders' },
+        'Orders'
+      ), _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: '/inventory' },
+        'Inventory'
+      ), _react2.default.createElement(
+        'a',
+        { onClick: function onClick(e) {
+            return _this2.props.logout();
+          } },
+        'Log out'
+      )];
+      var key = Math.random();
+      return _react2.default.createElement(
+        'nav',
+        { id: 'navbar', className: 'navbar navbar-expand-md' },
+        _react2.default.createElement('img', { className: 'navbar-logo', src: '/images/taag_logo_circle.png' }),
+        _react2.default.createElement(
+          'div',
+          { className: 'navbar-toggler-', 'data-toggle': 'collapse', 'data-target': '#nav-bar-links' + key, 'aria-controls': 'nav-bar-links' + key, 'aria-expanded': 'false', 'aria-label': 'Toggle navigation' },
+          _react2.default.createElement('i', { className: 'fas fa-bars', style: { color: '#ffff', fontSize: '2rem' } })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'collapse navbar-collapse', id: 'nav-bar-links' + key },
+          _react2.default.createElement(
+            'ul',
+            { className: 'navbar-nav mr-auto' },
+            links.map(function (link) {
+              return _react2.default.createElement(
+                'li',
+                { className: 'nav-item' },
+                _react2.default.createElement(
+                  'span',
+                  { className: 'nav-link' },
+                  link
+                )
+              );
+            })
+          )
+        )
+      );
+    }
+  }]);
+
+  return NavBar;
+}(_react2.default.Component);
+
+NavBar.displayName = 'NavBar';
+
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    logout: function logout(data) {
+      return dispatch(_session2.default.logout());
+    }
+  };
+};
+
+exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(null, mapDispatchToProps)(NavBar));
 
 /***/ }),
 
@@ -1405,6 +1801,14 @@ var _moment2 = _interopRequireDefault(_moment);
 
 __webpack_require__(/*! react-datepicker/dist/react-datepicker.css */ "./node_modules/react-datepicker/dist/react-datepicker.css");
 
+var _dropdown = __webpack_require__(/*! ./ui/dropdown */ "./frontend/components/ui/dropdown.js");
+
+var _dropdown2 = _interopRequireDefault(_dropdown);
+
+var _new_vendor_modal = __webpack_require__(/*! ./company/new_vendor_modal */ "./frontend/components/company/new_vendor_modal.js");
+
+var _new_vendor_modal2 = _interopRequireDefault(_new_vendor_modal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1435,7 +1839,9 @@ var NewItemDetail = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var detailValue = this.props.detailValue;
+      var _props = this.props,
+          detailValue = _props.detailValue,
+          itemDetail = _props.itemDetail;
 
       var columnName = this.props.itemDetail.columnName;
       var detailName = this.props.itemDetail.detailName ? this.props.itemDetail.detailName + ':' : columnName.charAt(0).toUpperCase() + columnName.slice(1) + ':';
@@ -1455,7 +1861,9 @@ var NewItemDetail = function (_React$Component) {
                 className: 'radio-button',
                 value: value.valueName,
                 checked: _this2.props.detailValue === value.valueName,
-                onChange: _this2.props.onValueChange(columnName)
+                onChange: function onChange(e) {
+                  return _this2.props.onValueChange(columnName, value.valueName);
+                }
               }),
               _react2.default.createElement(
                 'div',
@@ -1472,6 +1880,19 @@ var NewItemDetail = function (_React$Component) {
             onChange: this.onDateChange,
             popperPlacement: 'bottom'
           });
+          break;
+        case 'checkbox':
+          input = _react2.default.createElement('input', { type: 'checkbox', checked: this.props.detailValue, onChange: function onChange(e) {
+              return _this2.props.onValueChange(columnName, e.target.checked);
+            } });
+          break;
+        case 'dropdown':
+          input = _react2.default.createElement(_dropdown2.default, { newItemModalElement: function newItemModalElement(props) {
+              return _react2.default.createElement(_new_vendor_modal2.default, props);
+            }, resource: itemDetail.resource, value: this.props.detailValue, onChange: function onChange(e) {
+              return _this2.props.onValueChange(columnName, e.target.value);
+            } });
+          break;
       }
 
       return _react2.default.createElement(
@@ -1527,6 +1948,10 @@ var _new_item_detail = __webpack_require__(/*! ./new_item_detail */ "./frontend/
 
 var _new_item_detail2 = _interopRequireDefault(_new_item_detail);
 
+var _moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1549,7 +1974,13 @@ var NewItemForm = function (_React$Component) {
     _this.onClickSave = _this.onClickSave.bind(_this);
     _this.state = {};
     props.itemDetails.forEach(function (itemDetail) {
-      _this.state[itemDetail.columnName] = '';
+      if (itemDetail.type === 'checkbox') {
+        _this.state[itemDetail.columnName] = false;
+      } else if (itemDetail.type === 'date') {
+        _this.state[itemDetail.columnName] = (0, _moment2.default)();
+      } else {
+        _this.state[itemDetail.columnName] = '';
+      }
     });
     return _this;
   }
@@ -1567,7 +1998,9 @@ var NewItemForm = function (_React$Component) {
       event.preventDefault();
       var record = {};
       this.props.itemDetails.forEach(function (itemDetail) {
-        record[itemDetail.columnName] = _this2.state[itemDetail.columnName];
+        if (_this2.state[itemDetail.columnName]) {
+          record[itemDetail.columnName] = _this2.state[itemDetail.columnName];
+        }
       });
       if (this.props.parent) record[this.props.parent.column] = this.props.parent.id;
       this.props.create(record);
@@ -1782,6 +2215,10 @@ var _session = __webpack_require__(/*! ../resources/session */ "./frontend/resou
 
 var _session2 = _interopRequireDefault(_session);
 
+var _login = __webpack_require__(/*! ./login */ "./frontend/components/login.js");
+
+var _login2 = _interopRequireDefault(_login);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1789,20 +2226,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    authenticationState: state.session.isAuthenticated
-  };
-};
-
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-  return {
-    isAuthenticated: function isAuthenticated() {
-      return dispatch(_session2.default.isAuthenticated());
-    }
-  };
-};
 
 var Protected = function (_React$Component) {
   _inherits(Protected, _React$Component);
@@ -1816,21 +2239,23 @@ var Protected = function (_React$Component) {
   _createClass(Protected, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.props.isAuthenticated();
+      this.props.getAuthenticationState();
     }
   }, {
     key: 'render',
     value: function render() {
-      var isAuthenticated = this.props.authenticationState;
-      var children = this.props.children;
+      var _props = this.props,
+          isAuthenticated = _props.isAuthenticated,
+          children = _props.children;
+
       return (
-        // isAuthenticated ?
+        //   isAuthenticated ?
         _react2.default.createElement(
           'div',
           null,
           children
         )
-        // : 'Please log in'
+        // : <Login />
 
       );
     }
@@ -1840,6 +2265,22 @@ var Protected = function (_React$Component) {
 }(_react2.default.Component);
 
 Protected.displayName = 'Protected';
+
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.session.isAuthenticated
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    getAuthenticationState: function getAuthenticationState() {
+      return dispatch(_session2.default.isAuthenticated());
+    }
+  };
+};
+
 exports.default = (0, _reactRouter.withRouter)((0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Protected));
 
 /***/ }),
@@ -1963,10 +2404,19 @@ var DeleteWarning = function (_React$Component) {
   function DeleteWarning(props) {
     _classCallCheck(this, DeleteWarning);
 
-    return _possibleConstructorReturn(this, (DeleteWarning.__proto__ || Object.getPrototypeOf(DeleteWarning)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (DeleteWarning.__proto__ || Object.getPrototypeOf(DeleteWarning)).call(this, props));
+
+    _this.onClickDelete = _this.onClickDelete.bind(_this);
+    return _this;
   }
 
   _createClass(DeleteWarning, [{
+    key: 'onClickDelete',
+    value: function onClickDelete() {
+      this.props.toggle();
+      this.props.delete();
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -1990,7 +2440,7 @@ var DeleteWarning = function (_React$Component) {
             _react2.default.createElement(
               'button',
               { className: 'button--delete', onClick: function onClick(e) {
-                  return _this2.props.delete();
+                  return _this2.onClickDelete();
                 } },
               'Delete'
             ),
@@ -2012,6 +2462,153 @@ var DeleteWarning = function (_React$Component) {
 
 DeleteWarning.displayName = 'DeleteWarning';
 exports.default = DeleteWarning;
+
+/***/ }),
+
+/***/ "./frontend/components/ui/dropdown.js":
+/*!********************************************!*\
+  !*** ./frontend/components/ui/dropdown.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Dropdown = function (_React$Component) {
+  _inherits(Dropdown, _React$Component);
+
+  function Dropdown(props) {
+    _classCallCheck(this, Dropdown);
+
+    var _this = _possibleConstructorReturn(this, (Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call(this, props));
+
+    _this.toggleNewItemModal = _this.toggleNewItemModal.bind(_this);
+    _this.state = {
+      isNewItemModalVisible: false
+    };
+    return _this;
+  }
+
+  _createClass(Dropdown, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.getAll();
+    }
+  }, {
+    key: 'toggleNewItemModal',
+    value: function toggleNewItemModal() {
+      var isNewItemModalVisible = this.state.isNewItemModalVisible ? false : true;
+      this.setState({ isNewItemModalVisible: isNewItemModalVisible });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var _props = this.props,
+          resource = _props.resource,
+          items = _props.items,
+          value = _props.value,
+          onChange = _props.onChange,
+          newItemModalElement = _props.newItemModalElement;
+
+      var newItemModal = this.state.isNewItemModalVisible ? newItemModalElement({
+        isVisible: this.state.isNewItemModalVisible,
+        toggle: this.toggleNewItemModal,
+        resource: resource
+      })
+      // React.cloneElement(newItemModalElement, {
+      //   isVisible: this.state.isNewItemModalVisible,
+      //   toggle: this.toggleNewItemModal,
+      //   resource
+      // })
+      : null;
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'select',
+          { value: value, onChange: onChange },
+          _react2.default.createElement(
+            'option',
+            { disabled: true, value: '' },
+            ' -- select a vendor -- '
+          ),
+          items.map(function (item) {
+            return _react2.default.createElement(
+              'option',
+              { value: item.id },
+              item.name
+            );
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'button',
+            { className: 'button--new', onClick: function onClick(e) {
+                return _this2.toggleNewItemModal();
+              } },
+            _react2.default.createElement('i', { className: 'fas fa-plus-circle' }),
+            _react2.default.createElement(
+              'span',
+              null,
+              'Create new vendor'
+            )
+          )
+        ),
+        newItemModal
+      );
+    }
+  }]);
+
+  return Dropdown;
+}(_react2.default.Component);
+
+Dropdown.displayName = 'Dropdown';
+
+
+var mapStateToProps = function mapStateToProps(state, ownProps) {
+  var items = state[ownProps.resource.name];
+  return {
+    items: Object.values(items)
+  };
+};
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  var columns = 'name';
+  return {
+    getAll: function getAll() {
+      return dispatch(ownProps.resource.getByQuery({ columns: columns }));
+    }
+  };
+};
+
+exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dropdown));
 
 /***/ }),
 
@@ -2081,6 +2678,94 @@ var Modal = function (_React$Component) {
 
 Modal.displayName = 'Modal';
 exports.default = Modal;
+
+/***/ }),
+
+/***/ "./frontend/components/vendor_order/vendor_order_list.js":
+/*!***************************************************************!*\
+  !*** ./frontend/components/vendor_order/vendor_order_list.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _lodash = __webpack_require__(/*! lodash.get */ "./node_modules/lodash.get/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _functions = __webpack_require__(/*! ../../../util/functions */ "./util/functions.js");
+
+var _list = __webpack_require__(/*! ../list */ "./frontend/components/list.js");
+
+var _list2 = _interopRequireDefault(_list);
+
+var _job_order = __webpack_require__(/*! ../../resources/job_order */ "./frontend/resources/job_order.js");
+
+var _job_order2 = _interopRequireDefault(_job_order);
+
+var _list_item = __webpack_require__(/*! ../list_item */ "./frontend/components/list_item.js");
+
+var _list_item2 = _interopRequireDefault(_list_item);
+
+var _item_detail = __webpack_require__(/*! ../item_detail */ "./frontend/components/item_detail.js");
+
+var _item_detail2 = _interopRequireDefault(_item_detail);
+
+var _new_item_modal = __webpack_require__(/*! ../new_item_modal */ "./frontend/components/new_item_modal.js");
+
+var _new_item_modal2 = _interopRequireDefault(_new_item_modal);
+
+var _vendor_company = __webpack_require__(/*! ../../resources/vendor_company */ "./frontend/resources/vendor_company.js");
+
+var _vendor_company2 = _interopRequireDefault(_vendor_company);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var VendorOrderList = function VendorOrderList(props) {
+  var resource = props.resource ? props.resource : _job_order2.default;
+  var query = props.parentId ? { job_order_id: props.parentId } : {};
+  return _react2.default.createElement(
+    _list2.default,
+    _extends({ listName: 'Vendor Orders', query: query, resource: resource, columns: 'name,date_ordered' }, props),
+    _react2.default.createElement(
+      _list_item2.default,
+      { itemNameSource: { getName: function getName(newProps) {
+            var vendorName = (0, _lodash2.default)(newProps, 'item.name');
+            var date = (0, _lodash2.default)(newProps, 'item.date_ordered');
+            if (date) {
+              date = (0, _functions.getDateString)(date);
+              return vendorName + ' ordered on ' + date;
+            } else {
+              return vendorName + ' ordered';
+            }
+          } } },
+      _react2.default.createElement(_item_detail2.default, { column: 'po_num', detailName: 'PO Number' }),
+      _react2.default.createElement(_item_detail2.default, { column: 'date_ordered', detailName: 'Date Ordered', type: 'date' }),
+      _react2.default.createElement(_item_detail2.default, { column: 'number_of_pieces', detailName: 'Number of Pieces' }),
+      _react2.default.createElement(_item_detail2.default, { column: 'price' }),
+      _react2.default.createElement(_item_detail2.default, { column: 'notes' })
+    ),
+    _react2.default.createElement(_new_item_modal2.default, { itemTypeName: 'Vendor Order', parent: { id: props.parentId, column: 'job_order_id' },
+      itemDetails: [{ columnName: 'vendor_id', detailName: 'Vendor Name', type: 'dropdown', resource: _vendor_company2.default }, { columnName: 'po_num', detailName: 'PO Number' }, { columnName: 'date_ordered', detailName: 'Date Ordered', type: 'date' }, { columnName: 'number_of_pieces', detailName: 'Number of Pieces' }, { columnName: 'price' }, { columnName: 'notes' }] })
+  );
+};
+
+VendorOrderList.displayName = 'VendorOrderList';
+// <ItemDetail column='name' detailName='Vendor Name'/>
+
+exports.default = VendorOrderList;
 
 /***/ }),
 
@@ -2227,6 +2912,31 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Company = new _resource2.default('companies');
 exports.default = Company;
+
+/***/ }),
+
+/***/ "./frontend/resources/installation.js":
+/*!********************************************!*\
+  !*** ./frontend/resources/installation.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _resource = __webpack_require__(/*! ./resource */ "./frontend/resources/resource.js");
+
+var _resource2 = _interopRequireDefault(_resource);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Installation = new _resource2.default('installations');
+exports.default = Installation;
 
 /***/ }),
 
@@ -2510,34 +3220,198 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _lodash = __webpack_require__(/*! lodash.merge */ "./node_modules/lodash.merge/index.js");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var UserSession = function () {
+  function UserSession() {
+    _classCallCheck(this, UserSession);
+
+    this.reducer = this.reducer.bind(this);
+    this.actions = {
+      'IS_AUTHENTICATED': function IS_AUTHENTICATED(oldState, newData) {
+        return (0, _lodash2.default)({}, oldState, { isAuthenticated: newData });
+      },
+      'LOGIN': function LOGIN(oldState, newData) {
+        return (0, _lodash2.default)({}, oldState, { login: newData });
+      }
+    };
+  }
+
+  _createClass(UserSession, [{
+    key: 'isAuthenticated',
+    value: function isAuthenticated() {
+      return function (dispatch) {
+        return _axios2.default.get('/api/isAuthenticated').then(function (response) {
+          return dispatch({
+            type: 'IS_AUTHENTICATED',
+            data: response.data
+          });
+        });
+      };
+    }
+  }, {
+    key: 'login',
+    value: function login(data) {
+      return function (dispatch) {
+        return _axios2.default.post('/login', data).then(function (response) {
+          return dispatch({
+            type: 'IS_AUTHENTICATED',
+            data: response.data
+          });
+        });
+      };
+    }
+  }, {
+    key: 'logout',
+    value: function logout() {
+      return function (dispatch) {
+        return _axios2.default.get('/logout').then(function (response) {
+          return dispatch({
+            type: 'IS_AUTHENTICATED',
+            data: response.data
+          });
+        });
+      };
+    }
+  }, {
+    key: 'reducer',
+    value: function reducer() {
+      var oldState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var action = arguments[1];
+
+      // return {isAuthenticated: action.data};
+      if (!this.actions[action.type]) return oldState;
+      return this.actions[action.type](oldState, action.data);
+    }
+  }]);
+
+  return UserSession;
+}();
+
+// const Session = {
+//
+//   isAuthenticated: function() {
+//     return function(dispatch) {
+//       return axios.get('/api/isAuthenticated')
+//         .then(response => dispatch({
+//           type: 'IS_AUTHENTICATED',
+//           data: response.data
+//         }));
+//     }
+//   },
+//
+//   login: function(data) {
+//     return function(dispatch) {
+//       return axios.post('/login', data)
+//         .then(response => dispatch({
+//           type: 'LOGIN',
+//           data: response.data
+//         }));
+//     }
+//   },
+//
+//   actions: {
+//     'IS_AUTHENTICATED': (oldState, newData) => {
+//       return merge ({}, oldState, {isAuthenticated: newData});
+//     },
+//     'LOGIN': (oldState, newData) => {
+//       return merge ({}, oldState, {login: newData});
+//     },
+//   },
+//
+//   reducer: function(oldState = {}, action) {
+//     // return {isAuthenticated: action.data};
+//     return function () {
+//       if (!this.actions[action.type]) return oldState;
+//       return this.actions[action.type](oldState, action.data);
+//     };
+//   }
+//
+// }
+
+var Session = new UserSession();
+exports.default = Session;
+
+/***/ }),
+
+/***/ "./frontend/resources/vendor_company.js":
+/*!**********************************************!*\
+  !*** ./frontend/resources/vendor_company.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _resource = __webpack_require__(/*! ./resource */ "./frontend/resources/resource.js");
+
+var _resource2 = _interopRequireDefault(_resource);
+
 var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 
 var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Session = {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  isAuthenticated: function isAuthenticated() {
-    return function (dispatch) {
-      return _axios2.default.get('/api/isAuthenticated').then(function (response) {
-        return dispatch({
-          type: 'IS_AUTHENTICATED',
-          data: response.data
-        });
-      });
-    };
-  },
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  reducer: function reducer() {
-    var oldState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var action = arguments[1];
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-    return { isAuthenticated: action.data };
+var VendorCompanyResource = function (_Resource) {
+  _inherits(VendorCompanyResource, _Resource);
+
+  function VendorCompanyResource() {
+    _classCallCheck(this, VendorCompanyResource);
+
+    return _possibleConstructorReturn(this, (VendorCompanyResource.__proto__ || Object.getPrototypeOf(VendorCompanyResource)).apply(this, arguments));
   }
-};
 
-exports.default = Session;
+  _createClass(VendorCompanyResource, [{
+    key: 'getByQuery',
+    value: function getByQuery() {
+      var queryParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var subset = arguments[1];
+      var route = arguments[2];
+
+      queryParams.status = 'vendor';
+      return _get(VendorCompanyResource.prototype.__proto__ || Object.getPrototypeOf(VendorCompanyResource.prototype), 'getByQuery', this).call(this, queryParams, subset, route);
+    }
+  }, {
+    key: 'create',
+    value: function create(record, subset, route) {
+      record.status = 'vendor';
+      return _get(VendorCompanyResource.prototype.__proto__ || Object.getPrototypeOf(VendorCompanyResource.prototype), 'create', this).call(this, record, subset, route);
+    }
+  }]);
+
+  return VendorCompanyResource;
+}(_resource2.default);
+
+var VendorCompany = new VendorCompanyResource('companies', 'vendors');
+exports.default = VendorCompany;
 
 /***/ }),
 
@@ -2573,6 +3447,10 @@ var _client_company = __webpack_require__(/*! ./resources/client_company */ "./f
 
 var _client_company2 = _interopRequireDefault(_client_company);
 
+var _vendor_company = __webpack_require__(/*! ./resources/vendor_company */ "./frontend/resources/vendor_company.js");
+
+var _vendor_company2 = _interopRequireDefault(_vendor_company);
+
 var _job = __webpack_require__(/*! ./resources/job */ "./frontend/resources/job.js");
 
 var _job2 = _interopRequireDefault(_job);
@@ -2580,6 +3458,10 @@ var _job2 = _interopRequireDefault(_job);
 var _job_order = __webpack_require__(/*! ./resources/job_order */ "./frontend/resources/job_order.js");
 
 var _job_order2 = _interopRequireDefault(_job_order);
+
+var _installation = __webpack_require__(/*! ./resources/installation */ "./frontend/resources/installation.js");
+
+var _installation2 = _interopRequireDefault(_installation);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2591,17 +3473,23 @@ var prospects = _prospect_company2.default.reducer;
 
 var clients = _client_company2.default.reducer;
 
+var vendors = _vendor_company2.default.reducer;
+
 var jobs = _job2.default.reducer;
 
 var job_orders = _job_order2.default.reducer;
+
+var installations = _installation2.default.reducer;
 
 exports.default = (0, _redux.combineReducers)({
   session: session,
   companies: companies,
   prospects: prospects,
+  vendors: vendors,
   clients: clients,
   jobs: jobs,
-  job_orders: job_orders
+  job_orders: job_orders,
+  installations: installations
 });
 
 /***/ }),

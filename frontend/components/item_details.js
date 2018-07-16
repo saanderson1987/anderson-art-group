@@ -21,8 +21,10 @@ class ItemDetails extends React.Component {
   }
 
   updateDetail(column, value) {
-    const record = this.props.item;
-    record[column] = value;
+    const record = {
+      id: this.props.item.id,
+      [column]: value
+    };
     this.props.update(record);
   }
 
@@ -37,12 +39,12 @@ class ItemDetails extends React.Component {
           updateDetail: this.updateDetail
         });
       } else if (displayName.slice(-4) === 'List') {
-        subset = subset ? subset : [];
-        subset = [...subset, this.props.itemId, child.props.route];
+        let newSubset = subset ? subset : [];
+        newSubset = [...newSubset, this.props.itemId, child.props.route];
         child = React.cloneElement(child, {
           parentId: this.props.itemId,
           // query: {company_id: this.props.itemId},
-          subset
+          subset: newSubset
         });
       }
       return child;
